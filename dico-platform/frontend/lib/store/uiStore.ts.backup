@@ -1,0 +1,523 @@
+import { create } from 'zustand'
+import { subscribeWithSelector, devtools } from 'zustand/middleware'
+import type { Address } from 'viem'
+import type { 
+  UIState, 
+  UIActions, 
+  ModalState, 
+  LoadingState, 
+  ErrorState, 
+  FormValidationState, 
+  Toast 
+} from './types'
+
+const initialModalState: ModalState = {
+  investModal: {
+    isOpen: false,
+    projectId: null,
+    projectAddress: null
+  },
+  confirmationModal: {
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+    onCancel: null
+  },
+  walletModal: {
+    isOpen: false
+  },
+  projectModal: {
+    isOpen: false,
+    projectId: null
+  }
+}
+
+const initialLoadingState: LoadingState = {
+  global: false,
+  projects: false,
+  investments: false,
+  transactions: {}
+}
+
+const initialErrorState: ErrorState = {
+  global: null,
+  projects: null,
+  investments: null,
+  forms: {},
+  transactions: {}
+}
+
+const initialState: UIState = {
+  // Modal states
+  modals: initialModalState,
+  
+  // Loading states
+  loading: initialLoadingState,
+  
+  // Error states
+  errors: initialErrorState,
+  
+  // Form validation states
+  formValidation: {},
+  
+  // UI preferences
+  sidebarCollapsed: false,
+  showAdvancedFilters: false,
+  
+  // Toast notifications
+  toasts: []
+}
+
+// Utility functions
+const generateToastId = (): string => {
+  return 'toast_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+}
+
+const getToastDuration = (type: Toast['type']): number => {
+  switch (type) {
+    case 'error':
+      return 8000 // 8 seconds for errors
+    case 'warning':
+      return 6000 // 6 seconds for warnings
+    case 'success':
+      return 4000 // 4 seconds for success
+    case 'info':
+    default:
+      return 5000 // 5 seconds for info
+  }
+}
+
+// Create the UI store
+export const useUIStore = create<UIState & UIActions>()(
+  devtools(
+    subscribeWithSelector((set, get) => ({
+        // Initial state
+        ...initialState,
+        
+        // Modal actions
+        showInvestModal: (projectId: string, projectAddress: Address) => {
+          set((state) => ({
+            ...state,
+            modals: {
+              ...state.modals,
+              investModal: {
+                isOpen: true,
+                projectId,
+                projectAddress
+              }
+            }
+          }))
+        },
+        
+        hideInvestModal: () => {
+          set((draft) => {
+            draft.modals.investModal = {
+              isOpen: false,
+              projectId: null,
+              projectAddress: null
+            }
+          })
+        },
+        
+        showConfirmationModal: (title: string, message: string, onConfirm: () => void, onCancel?: () => void) => {
+          set((draft) => {
+            draft.modals.confirmationModal = {
+              isOpen: true,
+              title,
+              message,
+              onConfirm,
+              onCancel: onCancel || null
+            }
+          })
+        },
+        
+        hideConfirmationModal: () => {
+          set((draft) => {
+            draft.modals.confirmationModal = {
+              isOpen: false,
+              title: '',
+              message: '',
+              onConfirm: null,
+              onCancel: null
+            }
+          })
+        },
+        
+        showWalletModal: () => {
+          set((draft) => {
+            draft.modals.walletModal.isOpen = true
+          })
+        },
+        
+        hideWalletModal: () => {
+          set((draft) => {
+            draft.modals.walletModal.isOpen = false
+          })
+        },
+        
+        showProjectModal: (projectId: string) => {
+          set((draft) => {
+            draft.modals.projectModal = {
+              isOpen: true,
+              projectId
+            }
+          })
+        },
+        
+        hideProjectModal: () => {
+          set((draft) => {
+            draft.modals.projectModal = {
+              isOpen: false,
+              projectId: null
+            }
+          })
+        },
+        
+        // Loading actions
+        setGlobalLoading: (loading: boolean) => {
+          set((draft) => {
+            draft.loading.global = loading
+          })
+        },
+        
+        setProjectsLoading: (loading: boolean) => {
+          set((draft) => {
+            draft.loading.projects = loading
+          })
+        },
+        
+        setInvestmentsLoading: (loading: boolean) => {
+          set((draft) => {
+            draft.loading.investments = loading
+          })
+        },
+        
+        setTransactionLoading: (txId: string, loading: boolean) => {
+          set((draft) => {
+            if (loading) {
+              draft.loading.transactions[txId] = true
+            } else {
+              delete draft.loading.transactions[txId]
+            }
+          })
+        },
+        
+        // Error actions
+        setGlobalError: (error: string | null) => {
+          set((draft) => {
+            draft.errors.global = error
+          })
+        },
+        
+        setProjectsError: (error: string | null) => {
+          set((draft) => {
+            draft.errors.projects = error
+          })
+        },
+        
+        setInvestmentsError: (error: string | null) => {
+          set((draft) => {
+            draft.errors.investments = error
+          })
+        },
+        
+        setFormError: (formId: string, error: string | null) => {
+          set((draft) => {
+            if (error) {
+              draft.errors.forms[formId] = error
+            } else {
+              delete draft.errors.forms[formId]
+            }
+          })
+        },
+        
+        setTransactionError: (txId: string, error: string | null) => {
+          set((draft) => {
+            if (error) {
+              draft.errors.transactions[txId] = error
+            } else {
+              delete draft.errors.transactions[txId]
+            }
+          })
+        },
+        
+        clearAllErrors: () => {
+          set((draft) => {
+            draft.errors = {
+              global: null,
+              projects: null,
+              investments: null,
+              forms: {},
+              transactions: {}
+            }
+          })
+        },
+        
+        // Form validation actions
+        setFieldValidation: (formId: string, fieldName: string, status: 'idle' | 'validating' | 'valid' | 'error', message?: string) => {
+          set((draft) => {
+            if (!draft.formValidation[formId]) {
+              draft.formValidation[formId] = {}
+            }
+            
+            draft.formValidation[formId][fieldName] = {
+              status,
+              message
+            }
+          })
+        },
+        
+        clearFormValidation: (formId: string) => {
+          set((draft) => {
+            delete draft.formValidation[formId]
+          })
+        },
+        
+        // UI preference actions
+        toggleSidebar: () => {
+          set((draft) => {
+            draft.sidebarCollapsed = !draft.sidebarCollapsed
+          })
+        },
+        
+        toggleAdvancedFilters: () => {
+          set((draft) => {
+            draft.showAdvancedFilters = !draft.showAdvancedFilters
+          })
+        },
+        
+        // Toast actions
+        showToast: (type: 'info' | 'success' | 'warning' | 'error', title: string, message?: string, duration?: number) => {
+          const toast: Toast = {
+            id: generateToastId(),
+            type,
+            title,
+            message,
+            duration: duration || getToastDuration(type),
+            createdAt: new Date()
+          }
+          
+          set((draft) => {
+            draft.toasts.push(toast)
+            
+            // Limit to 5 toasts at once
+            if (draft.toasts.length > 5) {
+              draft.toasts = draft.toasts.slice(-5)
+            }
+          })
+          
+          // Auto-remove toast after duration
+          setTimeout(() => {
+            get().removeToast(toast.id)
+          }, toast.duration)
+        },
+        
+        removeToast: (id: string) => {
+          set((draft) => {
+            draft.toasts = draft.toasts.filter(toast => toast.id !== id)
+          })
+        },
+        
+        clearToasts: () => {
+          set((draft) => {
+            draft.toasts = []
+          })
+        }
+      }))
+    ),
+    {
+      name: 'ui-store'
+    }
+  )
+)
+
+// Selectors for optimized re-renders
+export const uiSelectors = {
+  // Get active modal
+  activeModal: (state: UIState & UIActions): keyof ModalState | null => {
+    const modals = state.modals
+    if (modals.investModal.isOpen) return 'investModal'
+    if (modals.confirmationModal.isOpen) return 'confirmationModal'
+    if (modals.walletModal.isOpen) return 'walletModal'
+    if (modals.projectModal.isOpen) return 'projectModal'
+    return null
+  },
+  
+  // Check if any modal is open
+  hasOpenModal: (state: UIState & UIActions): boolean => {
+    const modals = state.modals
+    return modals.investModal.isOpen || 
+           modals.confirmationModal.isOpen || 
+           modals.walletModal.isOpen || 
+           modals.projectModal.isOpen
+  },
+  
+  // Get all loading states
+  loadingStates: (state: UIState & UIActions): string[] => {
+    const loading = state.loading
+    const activeLoaders = []
+    
+    if (loading.global) activeLoaders.push('global')
+    if (loading.projects) activeLoaders.push('projects')
+    if (loading.investments) activeLoaders.push('investments')
+    
+    Object.keys(loading.transactions).forEach(txId => {
+      activeLoaders.push(`transaction:${txId}`)
+    })
+    
+    return activeLoaders
+  },
+  
+  // Check if any loading state is active
+  isLoading: (state: UIState & UIActions): boolean => {
+    const loading = state.loading
+    return loading.global || 
+           loading.projects || 
+           loading.investments || 
+           Object.keys(loading.transactions).length > 0
+  },
+  
+  // Get all error states
+  errorStates: (state: UIState & UIActions) => {
+    const errors = state.errors
+    const allErrors = []
+    
+    if (errors.global) allErrors.push({ type: 'global', message: errors.global })
+    if (errors.projects) allErrors.push({ type: 'projects', message: errors.projects })
+    if (errors.investments) allErrors.push({ type: 'investments', message: errors.investments })
+    
+    Object.entries(errors.forms).forEach(([formId, error]) => {
+      allErrors.push({ type: `form:${formId}`, message: error })
+    })
+    
+    Object.entries(errors.transactions).forEach(([txId, error]) => {
+      allErrors.push({ type: `transaction:${txId}`, message: error })
+    })
+    
+    return allErrors
+  },
+  
+  // Check if any error exists
+  hasErrors: (state: UIState & UIActions): boolean => {
+    const errors = state.errors
+    return !!(errors.global || 
+              errors.projects || 
+              errors.investments || 
+              Object.keys(errors.forms).length > 0 || 
+              Object.keys(errors.transactions).length > 0)
+  },
+  
+  // Get form validation for a specific form
+  formErrors: (formId: string) => (state: UIState & UIActions): Record<string, string> => {
+    const formValidation = state.formValidation[formId] || {}
+    const errors: Record<string, string> = {}
+    
+    Object.entries(formValidation).forEach(([fieldName, validation]) => {
+      if (validation.status === 'error' && validation.message) {
+        errors[fieldName] = validation.message
+      }
+    })
+    
+    return errors
+  },
+  
+  // Get field validation state
+  fieldValidation: (formId: string, fieldName: string) => (state: UIState & UIActions) => {
+    const formValidation = state.formValidation[formId]
+    if (!formValidation) return { status: 'idle' }
+    
+    return formValidation[fieldName] || { status: 'idle' }
+  },
+  
+  // Get visible toasts
+  visibleToasts: (state: UIState & UIActions): Toast[] => {
+    const now = Date.now()
+    return state.toasts.filter(toast => {
+      const age = now - toast.createdAt.getTime()
+      return age < (toast.duration || 5000)
+    })
+  },
+  
+  // Get UI layout state
+  layoutState: (state: UIState & UIActions) => ({
+    sidebarCollapsed: state.sidebarCollapsed,
+    showAdvancedFilters: state.showAdvancedFilters,
+    hasOpenModal: uiSelectors.hasOpenModal(state),
+    isLoading: uiSelectors.isLoading(state),
+    hasErrors: uiSelectors.hasErrors(state)
+  })
+}
+
+// Export store instance for direct access
+export const uiStore = useUIStore.getState()
+
+// Export types for external use
+export type UIStore = ReturnType<typeof useUIStore>
+
+// Utility hooks for common UI patterns
+export const useModal = (modalType: keyof ModalState) => {
+  const modal = useUIStore(state => state.modals[modalType])
+  const actions = useUIStore(state => ({
+    show: state[`show${modalType.charAt(0).toUpperCase() + modalType.slice(1)}` as keyof UIActions] as any,
+    hide: state[`hide${modalType.charAt(0).toUpperCase() + modalType.slice(1)}` as keyof UIActions] as any
+  }))
+  
+  return { modal, ...actions }
+}
+
+export const useLoading = (type?: keyof LoadingState | string) => {
+  const isLoading = useUIStore(uiSelectors.isLoading)
+  const globalLoading = useUIStore(state => state.loading.global)
+  const projectsLoading = useUIStore(state => state.loading.projects)
+  const investmentsLoading = useUIStore(state => state.loading.investments)
+  const transactionLoading = useUIStore(state => {
+    if (type?.startsWith('transaction:')) {
+      const txId = type.replace('transaction:', '')
+      return !!state.loading.transactions[txId]
+    }
+    return false
+  })
+  
+  if (!type) return isLoading
+  if (type === 'global') return globalLoading
+  if (type === 'projects') return projectsLoading
+  if (type === 'investments') return investmentsLoading
+  if (type.startsWith('transaction:')) return transactionLoading
+  return false
+}
+
+export const useToast = () => {
+  const showToast = useUIStore(state => state.showToast)
+  const removeToast = useUIStore(state => state.removeToast)
+  const clearToasts = useUIStore(state => state.clearToasts)
+  
+  const toast = {
+    success: (title: string, message?: string, duration?: number) => 
+      showToast('success', title, message, duration),
+    error: (title: string, message?: string, duration?: number) => 
+      showToast('error', title, message, duration),
+    warning: (title: string, message?: string, duration?: number) => 
+      showToast('warning', title, message, duration),
+    info: (title: string, message?: string, duration?: number) => 
+      showToast('info', title, message, duration)
+  }
+  
+  return { toast, removeToast, clearToasts }
+}
+
+export const useFormValidation = (formId: string) => {
+  const setFieldValidation = useUIStore(state => state.setFieldValidation)
+  const clearFormValidation = useUIStore(state => state.clearFormValidation)
+  const formErrors = useUIStore(uiSelectors.formErrors(formId))
+  
+  const setField = (fieldName: string, status: 'idle' | 'validating' | 'valid' | 'error', message?: string) => {
+    setFieldValidation(formId, fieldName, status, message)
+  }
+  
+  const clearForm = () => clearFormValidation(formId)
+  
+  const isValid = Object.keys(formErrors).length === 0
+  
+  return { setField, clearForm, formErrors, isValid }
+}

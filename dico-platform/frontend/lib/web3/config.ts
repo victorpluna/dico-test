@@ -50,11 +50,29 @@ export const SUPPORTED_CHAINS = {
   },
 } as const
 
-// Contract addresses (to be updated with deployed contracts)
+// Contract addresses by network
 export const CONTRACT_ADDRESSES = {
-  DICO_FACTORY: process.env.NEXT_PUBLIC_DICO_FACTORY_ADDRESS || '',
-  DICO_TOKEN: process.env.NEXT_PUBLIC_DICO_TOKEN_ADDRESS || '',
+  // Mainnet addresses (to be updated after mainnet deployment)
+  1: {
+    DICO_FACTORY: process.env.NEXT_PUBLIC_DICO_FACTORY_ADDRESS_MAINNET || '',
+    DICO_TOKEN: process.env.NEXT_PUBLIC_DICO_TOKEN_ADDRESS_MAINNET || '',
+  },
+  // Sepolia testnet addresses
+  11155111: {
+    DICO_FACTORY: process.env.NEXT_PUBLIC_DICO_FACTORY_ADDRESS_SEPOLIA || '',
+    DICO_TOKEN: process.env.NEXT_PUBLIC_DICO_TOKEN_ADDRESS_SEPOLIA || '',
+  },
+  // Hardhat local addresses
+  31337: {
+    DICO_FACTORY: process.env.NEXT_PUBLIC_DICO_FACTORY_ADDRESS_HARDHAT || '',
+    DICO_TOKEN: process.env.NEXT_PUBLIC_DICO_TOKEN_ADDRESS_HARDHAT || '',
+  },
 } as const
+
+// Helper function to get contract addresses for current network
+export const getContractAddresses = (chainId: number) => {
+  return CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES] || CONTRACT_ADDRESSES[31337]
+}
 
 // Gas estimation settings
 export const GAS_SETTINGS = {

@@ -235,3 +235,19 @@ Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-
  HEAD / 200 in 71ms
  GET /%F0%9F%8E%AE 404 in 124ms
  GET /%F0%9F%92%B0 404 in 125ms
+ GET / 200 in 93ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 270ms
+ GET /%F0%9F%8C%B1 404 in 183ms
+ GET /%F0%9F%8E%AE 404 in 185ms
+ GET /%F0%9F%92%B0 404 in 212ms
+ HEAD / 200 in 60ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 229ms
+ ✓ Compiled in 254ms
+ ✓ Compiled in 120ms
+ ✓ Compiled in 254ms
+ ✓ Compiled in 58ms
+ ✓ Compiled in 89ms
+ ✓ Compiled in 86ms
+ ✓ Compiled in 102ms
+ ✓ Compiled in 42ms
+ ✓ Compiled in 38ms

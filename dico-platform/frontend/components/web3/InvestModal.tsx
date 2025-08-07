@@ -3,7 +3,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatEther, parseEther, type Address } from 'viem'
+import { useAccount } from 'wagmi'
 import { useInvestmentStore, useUserStore, useUIStore, useToast, globalActions } from '@/lib/store'
+import { useInvestInProject, useWalletBalance } from '@/lib/web3/contract-hooks'
 
 interface InvestModalProps {
   isOpen: boolean
@@ -24,9 +26,14 @@ export function InvestModal({
   tokenPrice = 0.001,
   vestingPeriod = '12 months'
 }: InvestModalProps) {
+  // Wagmi hooks
+  const { address, isConnected } = useAccount()
+  const { balance, formattedBalance: balanceFormatted } = useWalletBalance(address)
+  
+  // Contract hooks
+  const { invest, isPending, isConfirming, isSuccess, error: investError, transactionHash } = useInvestInProject(projectAddress)
+  
   // Store hooks
-  const { pendingTransactions, setTransactionState, clearTransactionState } = useInvestmentStore()
-  const { isConnected, address, balance } = useUserStore()
   const { hideInvestModal } = useUIStore()
   const { toast } = useToast()
 
@@ -37,15 +44,25 @@ export function InvestModal({
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [agreedToRisks, setAgreedToRisks] = useState(false)
   
-  // Mock gas prices and transaction state
+  // Mock gas prices (in production, these would come from gas estimation)
   const standardGas = '0.002'
   const fastGas = '0.005'
   const gasLoading = false
-  const formattedBalance = balance ? `${balance.toFixed(4)} ETH` : '0.0000 ETH'
   
-  // Get transaction state
-  const txId = `invest_${projectAddress}_${Date.now()}`
-  const transactionState = pendingTransactions[txId] || { status: 'idle', message: '' }
+  // Transaction state based on wagmi hooks
+  const transactionState = useMemo(() => {
+    if (isSuccess) {
+      return { status: 'success', message: 'Investment confirmed!' }
+    } else if (investError) {
+      return { status: 'error', message: investError.message }
+    } else if (isConfirming) {
+      return { status: 'confirming', message: 'Waiting for confirmation...', transactionHash }
+    } else if (isPending) {
+      return { status: 'pending', message: 'Confirm transaction in wallet...' }
+    } else {
+      return { status: 'idle', message: '' }
+    }
+  }, [isSuccess, investError, isConfirming, isPending, transactionHash])
 
   // Calculate derived values
   const expectedTokens = useMemo(() => {
@@ -79,7 +96,7 @@ export function InvestModal({
       errors.push('Minimum investment is 0.01 ETH')
     }
     
-    if (balance && amountNum > balance) {
+    if (balance && parseEther(amount.toString()) > balance) {
       errors.push('Insufficient balance')
     }
     
@@ -110,8 +127,12 @@ export function InvestModal({
   const handleQuickAmount = (value: string) => {
     if (value === 'max') {
       // Use 95% of balance to account for gas fees
-      const maxAmount = balance ? (balance * 0.95).toFixed(4) : '0'
-      setAmount(maxAmount)
+      if (balance) {
+        const maxAmount = formatEther(balance * BigInt(95) / BigInt(100))
+        setAmount(maxAmount)
+      } else {
+        setAmount('0')
+      }
     } else {
       setAmount(value)
     }
@@ -128,34 +149,19 @@ export function InvestModal({
 
   const handleInvest = async () => {
     try {
-      setTransactionState(txId, {
-        status: 'pending',
-        message: 'Initiating investment transaction...'
-      })
-      
-      await globalActions.makeInvestment(
-        projectAddress, // Using as project ID for now
-        projectAddress,
-        amount
-      )
-      
-      setTransactionState(txId, {
-        status: 'success',
-        message: 'Investment successful!'
-      })
-      
+      await invest(amount)
     } catch (error) {
-      setTransactionState(txId, {
-        status: 'error',
-        message: error instanceof Error ? error.message : 'Investment failed',
-        error: error instanceof Error ? error.message : 'Unknown error'
+      console.error('Investment failed:', error)
+      toast.showToast({
+        type: 'error',
+        title: 'Investment Failed',
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
       })
     }
   }
 
   const handleClose = () => {
     if (transactionState.status !== 'pending' && transactionState.status !== 'confirming') {
-      clearTransactionState(txId)
       hideInvestModal()
       onClose()
     }
@@ -280,7 +286,7 @@ export function InvestModal({
                     {/* Wallet Balance */}
                     <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                       <span className="text-sm text-gray-600">Wallet Balance:</span>
-                      <span className="text-sm font-medium text-gray-900">{formattedBalance} ETH</span>
+                      <span className="text-sm font-medium text-gray-900">{balanceFormatted} ETH</span>
                     </div>
 
                     {/* Quick Amount Buttons */}

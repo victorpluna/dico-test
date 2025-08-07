@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { formatEther, parseEther, type Address } from 'viem'
 import { useAccount } from 'wagmi'
 import { useInvestmentStore, useUserStore, useUIStore, useToast, globalActions } from '@/lib/store'
-import { useInvestInProject, useWalletBalance } from '@/lib/web3/contract-hooks'
+import { useInvestInProject, useDicoTokenBalance } from '@/lib/web3/contract-hooks'
 
 interface InvestModalProps {
   isOpen: boolean
@@ -28,7 +28,7 @@ export function InvestModal({
 }: InvestModalProps) {
   // Wagmi hooks
   const { address, isConnected } = useAccount()
-  const { balance, formattedBalance: balanceFormatted } = useWalletBalance(address)
+  const { balance, formattedBalance: balanceFormatted } = useDicoTokenBalance(address)
   
   // Contract hooks
   const { invest, isPending, isConfirming, isSuccess, error: investError, transactionHash } = useInvestInProject(projectAddress)

@@ -7,182 +7,10 @@
    - Network:      http://192.168.15.187:3000
 
  ✓ Starting...
- ✓ Ready in 755ms
+ ✓ Ready in 741ms
  ○ Compiling / ...
- ✓ Compiled / in 4.2s
- ⨯ ./components/project/ProjectForm.tsx:7:1
-Export useFormValidation doesn't exist in target module
-[0m [90m  5 |[39m [36mimport[39m { z } [36mfrom[39m [32m'zod'[39m
- [90m  6 |[39m [36mimport[39m [33mProjectCard[39m [36mfrom[39m [32m'./ProjectCard'[39m
-[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { useProjectStore[33m,[39m useFormValidation[33m,[39m useToast[33m,[39m globalActions } [36mfrom[39m [32m'@/lib/store'[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m  8 |[39m
- [90m  9 |[39m [90m// Zod validation schemas[39m
- [90m 10 |[39m [36mconst[39m whitepaperSchema [33m=[39m z[33m.[39mstring()[33m.[39mregex([35m/^ipfs:\/\/.*/[39m[33m,[39m [32m'Must be a valid IPFS URL'[39m)[0m
-
-The export useFormValidation was not found in module [project]/lib/store/uiStore.ts [app-client] (ecmascript).
-Did you mean to import useToast?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  Client Component Browser:
-    ./components/project/ProjectForm.tsx [Client Component Browser]
-    ./components/project/index.ts [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./components/project/ProjectForm.tsx [Client Component SSR]
-    ./components/project/index.ts [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-
-
-./components/project/ProjectForm.tsx:7:1
-Export useFormValidation doesn't exist in target module
-[0m [90m  5 |[39m [36mimport[39m { z } [36mfrom[39m [32m'zod'[39m
- [90m  6 |[39m [36mimport[39m [33mProjectCard[39m [36mfrom[39m [32m'./ProjectCard'[39m
-[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { useProjectStore[33m,[39m useFormValidation[33m,[39m useToast[33m,[39m globalActions } [36mfrom[39m [32m'@/lib/store'[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m  8 |[39m
- [90m  9 |[39m [90m// Zod validation schemas[39m
- [90m 10 |[39m [36mconst[39m whitepaperSchema [33m=[39m z[33m.[39mstring()[33m.[39mregex([35m/^ipfs:\/\/.*/[39m[33m,[39m [32m'Must be a valid IPFS URL'[39m)[0m
-
-The export useFormValidation was not found in module [project]/lib/store/uiStore.ts [app-ssr] (ecmascript).
-Did you mean to import useToast?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  Client Component Browser:
-    ./components/project/ProjectForm.tsx [Client Component Browser]
-    ./components/project/index.ts [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./components/project/ProjectForm.tsx [Client Component SSR]
-    ./components/project/index.ts [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-
-
-./lib/store/index.ts:13:1
-Export useFormValidation doesn't exist in target module
-[0m [90m 11 |[39m [36mimport[39m { useInvestmentStore[33m,[39m investmentSelectors } [36mfrom[39m [32m'./investmentStore'[39m
- [90m 12 |[39m [36mimport[39m { useUserStore[33m,[39m userSelectors[33m,[39m useTheme[33m,[39m useNotifications } [36mfrom[39m [32m'./userStore'[39m
-[31m[1m>[22m[39m[90m 13 |[39m [36mimport[39m { useUIStore[33m,[39m uiSelectors[33m,[39m useModal[33m,[39m useLoading[33m,[39m useToast[33m,[39m useFormValidation } [36mfrom[39m [32m'./uiStore'[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 14 |[39m
- [90m 15 |[39m [90m// Export all individual stores for direct access[39m
- [90m 16 |[39m [36mexport[39m { [0m
-
-The export useFormValidation was not found in module [project]/lib/store/uiStore.ts [app-client] (ecmascript).
-Did you mean to import useToast?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  #1 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/providers/StoreProvider.tsx [Client Component Browser]
-    ./components/providers/StoreProvider.tsx [Server Component]
-    ./app/layout.tsx [Server Component]
-
-  #2 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/web3/InvestModal.tsx [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  #3 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/providers/StoreProvider.tsx [Client Component SSR]
-    ./components/providers/StoreProvider.tsx [Server Component]
-    ./app/layout.tsx [Server Component]
-
-  #4 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/web3/InvestModal.tsx [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-  #5 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/project/ProjectCard.tsx [Client Component Browser]
-    ./components/project/index.ts [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  #6 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/project/ProjectCard.tsx [Client Component SSR]
-    ./components/project/index.ts [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-
-
-./lib/store/index.ts:13:1
-Export useFormValidation doesn't exist in target module
-[0m [90m 11 |[39m [36mimport[39m { useInvestmentStore[33m,[39m investmentSelectors } [36mfrom[39m [32m'./investmentStore'[39m
- [90m 12 |[39m [36mimport[39m { useUserStore[33m,[39m userSelectors[33m,[39m useTheme[33m,[39m useNotifications } [36mfrom[39m [32m'./userStore'[39m
-[31m[1m>[22m[39m[90m 13 |[39m [36mimport[39m { useUIStore[33m,[39m uiSelectors[33m,[39m useModal[33m,[39m useLoading[33m,[39m useToast[33m,[39m useFormValidation } [36mfrom[39m [32m'./uiStore'[39m
- [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 14 |[39m
- [90m 15 |[39m [90m// Export all individual stores for direct access[39m
- [90m 16 |[39m [36mexport[39m { [0m
-
-The export useFormValidation was not found in module [project]/lib/store/uiStore.ts [app-ssr] (ecmascript).
-Did you mean to import useToast?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  #1 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/providers/StoreProvider.tsx [Client Component Browser]
-    ./components/providers/StoreProvider.tsx [Server Component]
-    ./app/layout.tsx [Server Component]
-
-  #2 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/web3/InvestModal.tsx [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  #3 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/providers/StoreProvider.tsx [Client Component SSR]
-    ./components/providers/StoreProvider.tsx [Server Component]
-    ./app/layout.tsx [Server Component]
-
-  #4 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/web3/InvestModal.tsx [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-  #5 [Client Component Browser]:
-    ./lib/store/index.ts [Client Component Browser]
-    ./components/project/ProjectCard.tsx [Client Component Browser]
-    ./components/project/index.ts [Client Component Browser]
-    ./app/page.tsx [Client Component Browser]
-    ./app/page.tsx [Server Component]
-
-  #6 [Client Component SSR]:
-    ./lib/store/index.ts [Client Component SSR]
-    ./components/project/ProjectCard.tsx [Client Component SSR]
-    ./components/project/index.ts [Client Component SSR]
-    ./app/page.tsx [Client Component SSR]
-    ./app/page.tsx [Server Component]
-
-
- ○ Compiling /_error ...
- ✓ Compiled /_error in 546ms
- GET / 500 in 4869ms
- ✓ Compiled in 64ms
- ✓ Compiled / in 29ms
- GET / 200 in 333ms
+ ✓ Compiled / in 4.6s
+ GET / 200 in 4976ms
 Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
 [Reown Config] Failed to fetch remote project configuration. Using local/default values. Error: HTTP status code: 403
     at fetchData (../../../../src/utils/FetchUtil.ts:23:16)
@@ -194,11 +22,11 @@ Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-
     status: 403,
     statusText: 'Forbidden',
     headers: Headers {
-      date: 'Thu, 07 Aug 2025 14:00:35 GMT',
+      date: 'Thu, 07 Aug 2025 19:06:51 GMT',
       'content-type': 'text/plain; charset=UTF-8',
       'content-length': '9',
       connection: 'keep-alive',
-      'cf-ray': '96b74d16ab42cada-GIG',
+      'cf-ray': '96b90db46d2fa026-GIG',
       'access-control-allow-origin': '*',
       'cache-control': 'public, max-age=300, s-maxage=300',
       'cf-placement': 'remote-ATL',
@@ -214,40 +42,39 @@ Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-
     url: 'https://api.web3modal.org/appkit/v1/config?projectId=dico-platform-default&st=appkit&sv=html-core-1.7.8'
   }
 }
- GET / 200 in 96ms
+ GET / 200 in 52ms
+ GET / 200 in 97ms
+ HEAD / 200 in 114ms
  ○ Compiling /favicon.ico ...
- GET /favicon.ico?favicon.45db1c09.ico 200 in 569ms
- HEAD / 200 in 236ms
- ✓ Compiled /favicon.ico in 2.6s
- GET /%F0%9F%8E%AE 404 in 2504ms
- GET /%F0%9F%8C%B1 404 in 2504ms
- GET /%F0%9F%92%B0 404 in 2507ms
- GET /favicon.ico?favicon.45db1c09.ico 200 in 225ms
- ○ Compiling /project/create ...
- ✓ Compiled /project/create in 1310ms
- GET /project/create 200 in 1407ms
- GET /favicon.ico?favicon.45db1c09.ico 200 in 237ms
- HEAD /project/create 200 in 101ms
- GET / 200 in 75ms
- GET /%F0%9F%8C%B1 404 in 150ms
- GET /%F0%9F%8E%AE 404 in 152ms
- GET /%F0%9F%92%B0 404 in 179ms
- HEAD / 200 in 71ms
- GET /%F0%9F%8E%AE 404 in 124ms
- GET /%F0%9F%92%B0 404 in 125ms
- GET / 200 in 93ms
- GET /favicon.ico?favicon.45db1c09.ico 200 in 270ms
- GET /%F0%9F%8C%B1 404 in 183ms
- GET /%F0%9F%8E%AE 404 in 185ms
- GET /%F0%9F%92%B0 404 in 212ms
- HEAD / 200 in 60ms
- GET /favicon.ico?favicon.45db1c09.ico 200 in 229ms
- ✓ Compiled in 254ms
- ✓ Compiled in 120ms
- ✓ Compiled in 254ms
- ✓ Compiled in 58ms
- ✓ Compiled in 89ms
- ✓ Compiled in 86ms
- ✓ Compiled in 102ms
- ✓ Compiled in 42ms
- ✓ Compiled in 38ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 760ms
+ ✓ Compiled /favicon.ico in 1987ms
+ GET /%F0%9F%92%B0 404 in 2067ms
+ GET /%F0%9F%8E%AE 404 in 2070ms
+ GET /%F0%9F%8C%B1 404 in 2072ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 224ms
+ GET / 200 in 119ms
+ GET /%F0%9F%92%B0 404 in 139ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 313ms
+ GET /%F0%9F%8C%B1 404 in 191ms
+ GET /%F0%9F%8E%AE 404 in 196ms
+ HEAD / 200 in 114ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 262ms
+ ○ Compiling /project/[id] ...
+ ✓ Compiled /project/[id] in 1442ms
+ GET /project/3 200 in 570ms
+ GET /project/3 200 in 190ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 280ms
+ HEAD /project/3 200 in 81ms
+ GET / 200 in 88ms
+ GET /%F0%9F%8E%AE 404 in 190ms
+ GET /%F0%9F%92%B0 404 in 213ms
+ GET /%F0%9F%8C%B1 404 in 221ms
+ HEAD / 200 in 141ms
+ GET /project/3 200 in 88ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 261ms
+ HEAD /project/3 200 in 64ms
+ GET / 200 in 86ms
+ GET /%F0%9F%8C%B1 404 in 229ms
+ GET /%F0%9F%92%B0 404 in 230ms
+ GET /%F0%9F%8E%AE 404 in 252ms
+ HEAD / 200 in 176ms

@@ -2,6 +2,8 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
 
 interface ProgressBarProps {
   currentAmount: number
@@ -220,7 +222,10 @@ const ProgressBar = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <h3 className="text-sm font-medium text-gray-700">Funding Progress</h3>
-          <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${statusColor.bg} ${statusColor.text}`}>
+          <Badge 
+            variant={status === 'success' ? 'default' : status === 'warning' ? 'secondary' : 'destructive'}
+            className="flex items-center space-x-1"
+          >
             <motion.div 
               className={`w-1.5 h-1.5 rounded-full ${statusColor.dot}`}
               variants={{
@@ -239,108 +244,96 @@ const ProgressBar = ({
             <span>
               {status === 'success' ? 'On Track' : status === 'warning' ? 'Good Progress' : 'Needs Support'}
             </span>
-          </div>
+          </Badge>
         </div>
         <div className="text-right">
-          <span className="text-2xl font-bold text-blue-600">{progressPercentage.toFixed(1)}%</span>
+          <span className="text-2xl font-bold text-primary">{progressPercentage.toFixed(1)}%</span>
         </div>
       </div>
 
       {/* Main Progress Bar */}
-      <div className={`relative w-full bg-gray-200 rounded-full ${heightStyles[height].wrapper} overflow-hidden`}>
-        {/* Background Track */}
-        <div className="absolute inset-0 bg-gray-200 rounded-full" />
-        
-        {/* Animated Fill */}
-        <motion.div 
-          className={`relative bg-gradient-to-r ${variantStyles[variant]} ${heightStyles[height].fill} rounded-full shadow-sm`}
-          variants={progressFillVariants}
-          initial="initial"
-          animate={isAnimating ? "animate" : "initial"}
-          role="progressbar" 
-          aria-valuemin="0" 
-          aria-valuemax="100" 
-          aria-valuenow={Math.round(progressPercentage)}
-          aria-label={`Funding progress: ${progressPercentage.toFixed(1)}% complete, ${currentAmount.toFixed(1)} ETH raised of ${targetAmount.toFixed(1)} ETH target`}
-          onAnimationComplete={() => setIsAnimating(false)}
+      <div className="relative space-y-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* Shimmer Effect */}
-          {animated && (
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12"
-              variants={shimmerVariants}
-              animate="animate"
-            />
-          )}
-          
-          {/* Progress Glow */}
-          <div className={`absolute inset-0 bg-gradient-to-r ${variantStyles[variant].replace('500', '400').replace('600', '500')} rounded-full blur-sm opacity-75`} />
+          <Progress 
+            value={isAnimating ? progressPercentage : 0}
+            className={`w-full ${heightStyles[height].wrapper} transition-all duration-1000`}
+            aria-label={`Funding progress: ${progressPercentage.toFixed(1)}% complete, ${currentAmount.toFixed(1)} ETH raised of ${targetAmount.toFixed(1)} ETH target`}
+          />
         </motion.div>
-        
+
         {/* Milestone Markers */}
         {showMilestones && (
-          <div className="absolute inset-0">
-            {milestones.map((milestone, index) => {
-              const isApproaching = !milestone.reached && Math.abs(progressPercentage - milestone.percentage) < 5
-              const status = milestone.reached ? 'reached' : isApproaching ? 'approaching' : 'pending'
-              
-              return (
-                <motion.div
-                  key={milestone.percentage}
-                  className="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 cursor-pointer z-10 group"
-                  style={{ left: `${milestone.percentage}%` }}
-                  onMouseEnter={() => setShowTooltip(milestone.label)}
-                  onMouseLeave={() => setShowTooltip(null)}
-                  whileHover={{ scale: 1.2 }}
-                >
+          <div className="relative">
+            <div className="absolute inset-0 flex justify-between items-center px-1" style={{ top: `-${heightStyles[height].wrapper === 'h-1' ? '6' : heightStyles[height].wrapper === 'h-3' ? '8' : '10'}px` }}>
+              {milestones.map((milestone, index) => {
+                const isApproaching = !milestone.reached && Math.abs(progressPercentage - milestone.percentage) < 5
+                const status = milestone.reached ? 'reached' : isApproaching ? 'approaching' : 'pending'
+                
+                return (
                   <motion.div
-                    className={`${heightStyles[height].marker} rounded-full border-2 border-white shadow-md transition-all duration-200`}
-                    variants={milestoneVariants}
-                    animate={status}
-                    initial="pending"
-                  />
-                  
-                  {/* Tooltip */}
-                  {showTooltip === milestone.label && (
+                    key={milestone.percentage}
+                    className="absolute cursor-pointer z-10 group"
+                    style={{ left: `${milestone.percentage}%`, transform: 'translateX(-50%)' }}
+                    onMouseEnter={() => setShowTooltip(milestone.label)}
+                    onMouseLeave={() => setShowTooltip(null)}
+                    whileHover={{ scale: 1.2 }}
+                  >
                     <motion.div
-                      className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 pointer-events-none"
-                      variants={tooltipVariants}
-                      initial="hidden"
-                      animate="visible"
-                    >
-                      <div className="bg-gray-900 text-white text-xs font-medium px-2 py-1 rounded whitespace-nowrap">
-                        {milestone.label}
-                      </div>
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
-                    </motion.div>
-                  )}
-                </motion.div>
-              )
-            })}
+                      className={`${heightStyles[height].marker} rounded-full border-2 border-white shadow-md transition-all duration-200 ${
+                        milestone.reached 
+                          ? 'bg-green-500' 
+                          : isApproaching 
+                            ? 'bg-blue-500' 
+                            : 'bg-gray-300'
+                      }`}
+                      variants={milestoneVariants}
+                      animate={status}
+                      initial="pending"
+                    />
+                    
+                    {/* Tooltip */}
+                    {showTooltip === milestone.label && (
+                      <motion.div
+                        className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 pointer-events-none"
+                        variants={tooltipVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
+                        <div className="bg-popover text-popover-foreground text-xs font-medium px-2 py-1 rounded border whitespace-nowrap">
+                          {milestone.label}
+                        </div>
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-popover" />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                )
+              })}
+            </div>
           </div>
         )}
-        
-        {/* Target Line */}
-        <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-gray-400" />
       </div>
 
       {/* Funding Details */}
       <div className="flex items-center justify-between text-sm">
         <div className="flex flex-col space-y-1">
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Raised</span>
-          <span className="text-base font-bold text-gray-900 tabular-nums">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Raised</span>
+          <span className="text-base font-bold text-foreground tabular-nums">
             {currentAmount.toFixed(1)} ETH
           </span>
-          <span className="text-xs text-gray-500 tabular-nums">
+          <span className="text-xs text-muted-foreground tabular-nums">
             (${currentUsd.toLocaleString()})
           </span>
         </div>
         <div className="flex flex-col space-y-1 text-right">
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Target</span>
-          <span className="text-base font-bold text-gray-900 tabular-nums">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Target</span>
+          <span className="text-base font-bold text-foreground tabular-nums">
             {targetAmount.toFixed(1)} ETH
           </span>
-          <span className="text-xs text-gray-500 tabular-nums">
+          <span className="text-xs text-muted-foreground tabular-nums">
             (${targetUsd.toLocaleString()})
           </span>
         </div>
@@ -348,7 +341,7 @@ const ProgressBar = ({
 
       {/* Trust Transparency Features */}
       {showTransparency && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="mt-4 p-3 bg-muted/50 rounded-lg border">
           <div className="grid grid-cols-3 gap-4">
             <div className="flex items-center space-x-2">
               <div className="flex-shrink-0">
@@ -357,8 +350,8 @@ const ProgressBar = ({
                 </svg>
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs text-gray-500 font-medium">Verified Funds</span>
-                <span className="text-xs font-bold text-gray-900 truncate">
+                <span className="text-xs text-muted-foreground font-medium">Verified Funds</span>
+                <span className="text-xs font-bold text-foreground truncate">
                   {currentAmount.toFixed(1)} ETH
                 </span>
               </div>
@@ -371,8 +364,8 @@ const ProgressBar = ({
                 </svg>
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs text-gray-500 font-medium">Creator Stake</span>
-                <span className="text-xs font-bold text-gray-900 truncate">
+                <span className="text-xs text-muted-foreground font-medium">Creator Stake</span>
+                <span className="text-xs font-bold text-foreground truncate">
                   {creatorStake} ETH ({skinInGamePercentage}%)
                 </span>
               </div>
@@ -385,8 +378,8 @@ const ProgressBar = ({
                 </svg>
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs text-gray-500 font-medium">Backers</span>
-                <span className="text-xs font-bold text-gray-900 truncate">
+                <span className="text-xs text-muted-foreground font-medium">Backers</span>
+                <span className="text-xs font-bold text-foreground truncate">
                   {backers} investors
                 </span>
               </div>
@@ -403,8 +396,8 @@ const ProgressBar = ({
             variants={updatePulseVariants}
             animate="animate"
           />
-          <span className="text-gray-500">Last updated {lastUpdated}</span>
-          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium underline">
+          <span className="text-muted-foreground">Last updated {lastUpdated}</span>
+          <a href="#" className="text-primary hover:text-primary/80 font-medium underline">
             View transactions
           </a>
         </div>

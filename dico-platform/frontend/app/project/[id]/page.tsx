@@ -6,8 +6,12 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ProgressBar, CountdownTimer } from '@/components/project'
 import { InvestModal } from '@/components/web3/InvestModal'
-import { WalletConnect } from '@/components/web3/WalletConnect'
 import { useWalletConnection } from '@/lib/web3/hooks'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Project, ProjectStatus } from '@/components/project/types'
 import type { Address } from 'viem'
 
@@ -224,94 +228,87 @@ export default function ProjectDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header with Navigation */}
-      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:opacity-80">
-                Dico Platform
-              </Link>
-              {/* Breadcrumb */}
-              <nav className="flex items-center space-x-2 text-sm text-gray-500">
-                <Link href="/" className="hover:text-blue-600">Projects</Link>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <span className="text-gray-900 font-medium">{project.name}</span>
-              </nav>
-            </div>
-            <WalletConnect />
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Project Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-gray-200/50"
-        >
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="flex items-center space-x-4">
-              <div className="text-6xl">{project.logo}</div>
-              <div>
-                <div className="flex items-center space-x-3 mb-2">
-                  <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
-                  {project.verification.verified && (
-                    <div className="flex items-center space-x-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm font-medium">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>Verified</span>
-                    </div>
-                  )}
-                </div>
-                <p className="text-gray-600 max-w-2xl">{project.description}</p>
-                
-                {/* Creator Info */}
-                <div className="mt-4 flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl">{project.creator.avatar}</span>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{project.creator.name}</p>
-                      <p className="text-xs text-gray-500">Creator • Reputation: {project.creator.reputation}%</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
+        <Link href="/" className="hover:text-blue-600">Projects</Link>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+        <span className="text-foreground font-medium">{project.name}</span>
+      </nav>
+      {/* Project Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <Card className="mb-8">
+          <CardHeader className="pb-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="flex items-center space-x-4">
+                <div className="text-6xl">{project.logo}</div>
+                <div>
+                  <div className="flex items-center space-x-3 mb-2">
+                    <CardTitle className="text-3xl">{project.name}</CardTitle>
+                    {project.verification.verified && (
+                      <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-200">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Verified
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground max-w-2xl">{project.description}</p>
+                  
+                  {/* Creator Info */}
+                  <div className="mt-4 flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-2xl">{project.creator.avatar}</span>
+                      <div>
+                        <p className="text-sm font-medium">{project.creator.name}</p>
+                        <p className="text-xs text-muted-foreground">Creator • Reputation: {project.creator.reputation}%</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => setInvestModalOpen(true)}
-                disabled={!isConnected || project.status !== ProjectStatus.ACTIVE}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:cursor-not-allowed"
-              >
-                {!isConnected ? 'Connect Wallet' : 'Invest Now'}
-              </button>
-              <Link
-                href="/dashboard"
-                className="border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-6 rounded-lg transition-colors text-center"
-              >
-                View Dashboard
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  onClick={() => setInvestModalOpen(true)}
+                  disabled={!isConnected || project.status !== ProjectStatus.ACTIVE}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  size="lg"
+                >
+                  {!isConnected ? 'Connect Wallet' : 'Invest Now'}
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                >
+                  <Link href="/dashboard">
+                    View Dashboard
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </CardHeader>
+        </Card>
+      </motion.div>
 
-        {/* Progress Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8"
-        >
-          {/* Funding Progress */}
-          <div className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Funding Progress</h3>
+      {/* Progress Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8"
+      >
+        {/* Funding Progress */}
+        <Card className="lg:col-span-2">
+          <CardContent className="pt-6">
+            <CardTitle className="text-lg mb-4">Funding Progress</CardTitle>
             <ProgressBar
               currentAmount={project.funding.currentAmount}
               targetAmount={project.funding.targetAmount}
@@ -349,11 +346,13 @@ export default function ProjectDetail() {
                 <p className="text-sm text-gray-500">Backers</p>
               </div>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Countdown Timer */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Time Remaining</h3>
+        {/* Countdown Timer */}
+        <Card>
+          <CardContent className="pt-6">
+            <CardTitle className="text-lg mb-4">Time Remaining</CardTitle>
             <CountdownTimer
               endDate={project.timeline.endDate}
               size="large"
@@ -361,60 +360,49 @@ export default function ProjectDetail() {
               showSeconds={true}
               className="mb-4"
             />
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm text-muted-foreground text-center">
               Campaign ends on {project.timeline.endDate.toLocaleDateString()}
             </p>
-          </div>
-        </motion.div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
-        {/* Tabs Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2 border border-gray-200/50">
-            <nav className="flex space-x-1">
-              {[
-                { id: 'overview', label: 'Overview', icon: '📋' },
-                { id: 'code', label: 'Smart Contract', icon: '🔒' },
-                { id: 'updates', label: 'Updates', icon: '📢' },
-                { id: 'backers', label: 'Backers', icon: '👥' }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </nav>
-          </div>
-        </motion.div>
+      {/* Tabs Navigation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-8"
+      >
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview" className="flex items-center space-x-2">
+              <span>📋</span>
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="code" className="flex items-center space-x-2">
+              <span>🔒</span>
+              <span className="hidden sm:inline">Contract</span>
+            </TabsTrigger>
+            <TabsTrigger value="updates" className="flex items-center space-x-2">
+              <span>📢</span>
+              <span className="hidden sm:inline">Updates</span>
+            </TabsTrigger>
+            <TabsTrigger value="backers" className="flex items-center space-x-2">
+              <span>👥</span>
+              <span className="hidden sm:inline">Backers</span>
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Tab Content */}
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50"
-        >
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <div className="p-8">
+          {/* Tab Content */}
+          <TabsContent value="overview">
+            <Card>
+              <CardContent className="pt-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Project Details */}
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Project Details</h3>
+                    <h3 className="text-xl font-semibold mb-4">Project Details</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Token Symbol:</span>
@@ -439,8 +427,10 @@ export default function ProjectDetail() {
                     </div>
                   </div>
 
+                  <Separator />
+
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Documents</h3>
+                    <h3 className="text-xl font-semibold mb-4">Documents</h3>
                     <div className="space-y-3">
                       <a href={project.whitepaperUrl} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -471,7 +461,7 @@ export default function ProjectDetail() {
                 {/* Tokenomics */}
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Token Distribution</h3>
+                    <h3 className="text-xl font-semibold mb-4">Token Distribution</h3>
                     <div className="space-y-3">
                       {project.tokenomics.distribution.map((item, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -491,8 +481,10 @@ export default function ProjectDetail() {
                     </div>
                   </div>
 
+                  <Separator />
+
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Verification Badges</h3>
+                    <h3 className="text-xl font-semibold mb-4">Verification Badges</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {project.verification.badges.map((badge, index) => (
                         <div key={index} className={`p-3 rounded-lg border ${badge.verified ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
@@ -512,8 +504,10 @@ export default function ProjectDetail() {
                     </div>
                   </div>
 
+                  <Separator />
+
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Milestones</h3>
+                    <h3 className="text-xl font-semibold mb-4">Milestones</h3>
                     <div className="space-y-3">
                       {project.timeline.milestones.map((milestone, index) => (
                         <div key={milestone.id} className={`p-4 rounded-lg border ${milestone.reached ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
@@ -538,14 +532,15 @@ export default function ProjectDetail() {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {/* Smart Contract Tab */}
-          {activeTab === 'code' && (
-            <div className="p-8">
+          <TabsContent value="code">
+            <Card>
+              <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">Smart Contract Code</h3>
+                <h3 className="text-xl font-semibold">Smart Contract Code</h3>
                 <div className="flex items-center space-x-2 text-sm text-gray-500">
                   <span>Contract Address:</span>
                   <code className="bg-gray-100 px-2 py-1 rounded font-mono text-xs">
@@ -582,13 +577,14 @@ export default function ProjectDetail() {
                   The code above represents the exact contract that will be deployed.
                 </p>
               </div>
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {/* Updates Tab */}
-          {activeTab === 'updates' && (
-            <div className="p-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Project Updates</h3>
+          <TabsContent value="updates">
+            <Card>
+              <CardContent className="pt-6">
+              <h3 className="text-xl font-semibold mb-6">Project Updates</h3>
               
               {project.updates.length === 0 ? (
                 <div className="text-center py-12">
@@ -636,14 +632,15 @@ export default function ProjectDetail() {
                   ))}
                 </div>
               )}
-            </div>
-          )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {/* Backers Tab */}
-          {activeTab === 'backers' && (
-            <div className="p-8">
+          <TabsContent value="backers">
+            <Card>
+              <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">Project Backers</h3>
+                <h3 className="text-xl font-semibold">Project Backers</h3>
                 <span className="text-sm text-gray-500">{project.backers.length} total backers</span>
               </div>
               
@@ -719,10 +716,11 @@ export default function ProjectDetail() {
                   ))}
                 </div>
               </div>
-            </div>
-          )}
-        </motion.div>
-      </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </motion.div>
 
       {/* Investment Modal */}
       <InvestModal

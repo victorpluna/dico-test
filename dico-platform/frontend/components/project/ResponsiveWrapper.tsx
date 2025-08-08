@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Input } from '@/components/ui/input'
 
-// Hook for responsive behavior
+// Hook for responsive behavior using Tailwind/shadcn-ui breakpoints
 export const useResponsive = () => {
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 1024,
@@ -18,19 +19,33 @@ export const useResponsive = () => {
     }
 
     window.addEventListener('resize', handleResize)
+    handleResize() // Call once to set initial size
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const isMobile = windowSize.width < 768
-  const isTablet = windowSize.width >= 768 && windowSize.width < 1024
-  const isDesktop = windowSize.width >= 1024
+  // Tailwind/shadcn-ui breakpoints: sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px
+  const isMobile = windowSize.width < 640
+  const isSm = windowSize.width >= 640 && windowSize.width < 768
+  const isMd = windowSize.width >= 768 && windowSize.width < 1024
+  const isLg = windowSize.width >= 1024 && windowSize.width < 1280
+  const isXl = windowSize.width >= 1280 && windowSize.width < 1536
+  const is2Xl = windowSize.width >= 1536
+
+  const isTablet = isSm || isMd
+  const isDesktop = isLg || isXl || is2Xl
 
   return {
     windowSize,
     isMobile,
+    isSm,
+    isMd,
+    isLg,
+    isXl,
+    is2Xl,
     isTablet,
     isDesktop,
-    breakpoint: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop'
+    breakpoint: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+    currentBreakpoint: isMobile ? 'mobile' : isSm ? 'sm' : isMd ? 'md' : isLg ? 'lg' : isXl ? 'xl' : '2xl'
   }
 }
 
@@ -109,25 +124,59 @@ export const trapFocus = (element: HTMLElement) => {
   }
 }
 
-// Responsive component wrapper
+// Enhanced responsive component wrapper with shadcn-ui breakpoints
 interface ResponsiveWrapperProps {
   children: React.ReactNode
   mobileClass?: string
-  tabletClass?: string
-  desktopClass?: string
+  smClass?: string
+  mdClass?: string
+  lgClass?: string
+  xlClass?: string
+  xl2Class?: string
+  tabletClass?: string // Legacy support
+  desktopClass?: string // Legacy support
   className?: string
 }
 
 export const ResponsiveWrapper: React.FC<ResponsiveWrapperProps> = ({
   children,
   mobileClass = '',
-  tabletClass = '',
-  desktopClass = '',
+  smClass = '',
+  mdClass = '',
+  lgClass = '',
+  xlClass = '',
+  xl2Class = '',
+  tabletClass = '', // Fallback for legacy
+  desktopClass = '', // Fallback for legacy
   className = ''
 }) => {
-  const { isMobile, isTablet, isDesktop } = useResponsive()
+  const { 
+    isMobile, 
+    isSm, 
+    isMd, 
+    isLg, 
+    isXl, 
+    is2Xl,
+    isTablet, 
+    isDesktop 
+  } = useResponsive()
 
-  const responsiveClass = isMobile ? mobileClass : isTablet ? tabletClass : desktopClass
+  // Use specific breakpoint classes if provided, otherwise fall back to legacy classes
+  const responsiveClass = isMobile 
+    ? mobileClass 
+    : isSm && smClass 
+      ? smClass 
+      : isMd && mdClass 
+        ? mdClass 
+        : isLg && lgClass 
+          ? lgClass 
+          : isXl && xlClass 
+            ? xlClass 
+            : is2Xl && xl2Class 
+              ? xl2Class 
+              : isTablet 
+                ? tabletClass 
+                : desktopClass
 
   return (
     <div className={`${className} ${responsiveClass}`.trim()}>
@@ -136,67 +185,11 @@ export const ResponsiveWrapper: React.FC<ResponsiveWrapperProps> = ({
   )
 }
 
-// Accessible button component
-interface AccessibleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
-  size?: 'small' | 'medium' | 'large'
-  loading?: boolean
-  ariaLabel?: string
-}
+// Re-export Button from shadcn-ui for legacy compatibility
+export { Button as AccessibleButton } from '@/components/ui/button'
 
-export const AccessibleButton: React.FC<AccessibleButtonProps> = ({
-  children,
-  variant = 'primary',
-  size = 'medium',
-  loading = false,
-  ariaLabel,
-  className = '',
-  disabled,
-  ...props
-}) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2'
-  
-  const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white focus:ring-blue-600',
-    secondary: 'bg-white hover:bg-gray-50 active:bg-gray-100 text-gray-700 border border-gray-300 focus:ring-blue-600',
-    danger: 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-white focus:ring-red-600',
-    ghost: 'bg-transparent hover:bg-gray-100 active:bg-gray-200 text-gray-700 focus:ring-gray-500'
-  }
-  
-  const sizeClasses = {
-    small: 'px-3 py-2 text-sm',
-    medium: 'px-4 py-2 text-base',
-    large: 'px-6 py-3 text-lg'
-  }
-  
-  const disabledClasses = 'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-current'
+// Enhanced accessible input component using shadcn-ui Input
 
-  return (
-    <button
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`.trim()}
-      disabled={disabled || loading}
-      aria-label={ariaLabel}
-      aria-busy={loading}
-      {...props}
-    >
-      {loading && (
-        <svg 
-          className="animate-spin -ml-1 mr-2 h-4 w-4" 
-          fill="none" 
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
-          <path fill="currentColor" className="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-        </svg>
-      )}
-      {children}
-    </button>
-  )
-}
-
-// Accessible input component
 interface AccessibleInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   error?: string
@@ -219,27 +212,21 @@ export const AccessibleInput: React.FC<AccessibleInputProps> = ({
   const errorId = `${inputId}-error`
   const helpId = `${inputId}-help`
 
-  const inputClasses = `w-full px-3 py-2 border rounded-lg placeholder-gray-400 text-gray-900 focus:ring-2 focus:border-transparent transition-colors duration-200 ${
-    error 
-      ? 'border-red-300 focus:ring-red-500' 
-      : 'border-gray-300 focus:ring-blue-600'
-  }`
-
   return (
     <div className="space-y-1">
       {showLabel && (
         <label 
           htmlFor={inputId}
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-foreground"
         >
           {label}
-          {required && <span className="text-red-500 ml-1" aria-label="required">*</span>}
+          {required && <span className="text-destructive ml-1" aria-label="required">*</span>}
         </label>
       )}
       
-      <input
+      <Input
         id={inputId}
-        className={`${inputClasses} ${className}`.trim()}
+        className={error ? 'border-destructive focus-visible:ring-destructive/20' : className}
         aria-describedby={`${error ? errorId : ''} ${helpText ? helpId : ''}`.trim() || undefined}
         aria-invalid={error ? 'true' : 'false'}
         aria-required={required}
@@ -247,13 +234,13 @@ export const AccessibleInput: React.FC<AccessibleInputProps> = ({
       />
       
       {helpText && (
-        <p id={helpId} className="text-xs text-gray-500">
+        <p id={helpId} className="text-xs text-muted-foreground">
           {helpText}
         </p>
       )}
       
       {error && (
-        <p id={errorId} className="text-xs text-red-600" role="alert">
+        <p id={errorId} className="text-xs text-destructive" role="alert">
           {error}
         </p>
       )}
@@ -265,7 +252,7 @@ export const AccessibleInput: React.FC<AccessibleInputProps> = ({
 export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
   <a
     href={href}
-    className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50"
+    className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50 focus:ring-2 focus:ring-ring focus:ring-offset-2"
   >
     {children}
   </a>

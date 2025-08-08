@@ -2,6 +2,10 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useCallback } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Clock } from 'lucide-react'
 
 interface TimeRemaining {
   days: number
@@ -125,25 +129,28 @@ const CountdownTimer = ({
   // Urgency color configurations
   const urgencyColors = {
     healthy: {
-      bg: 'bg-green-50/80',
-      text: 'text-green-800',
-      border: 'border-green-200/50',
+      bg: 'bg-green-50/80 dark:bg-green-900/20',
+      text: 'text-green-800 dark:text-green-200',
+      border: 'border-green-200/50 dark:border-green-700/50',
       dot: 'bg-green-400',
-      label: 'Healthy timeline'
+      label: 'Healthy timeline',
+      variant: 'secondary' as const
     },
     warning: {
-      bg: 'bg-amber-50/80',
-      text: 'text-amber-800',
-      border: 'border-amber-200/50',
+      bg: 'bg-amber-50/80 dark:bg-amber-900/20',
+      text: 'text-amber-800 dark:text-amber-200',
+      border: 'border-amber-200/50 dark:border-amber-700/50',
       dot: 'bg-amber-400',
-      label: 'Limited time'
+      label: 'Limited time',
+      variant: 'outline' as const
     },
     critical: {
-      bg: 'bg-red-50/80',
-      text: 'text-red-800',
-      border: 'border-red-200/50',
+      bg: 'bg-red-50/80 dark:bg-red-900/20',
+      text: 'text-red-800 dark:text-red-200',
+      border: 'border-red-200/50 dark:border-red-700/50',
       dot: 'bg-red-400',
-      label: 'Urgent deadline'
+      label: 'Urgent deadline',
+      variant: 'destructive' as const
     }
   }
   
@@ -270,17 +277,16 @@ const CountdownTimer = ({
   if (isComplete) {
     return (
       <motion.div
-        className={`inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium bg-gray-100 text-gray-600 ${className}`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
         role="timer"
         aria-label="Campaign has ended"
       >
-        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        Campaign Ended
+        <Badge variant="secondary" className={`inline-flex items-center justify-center px-4 py-2 ${className}`}>
+          <Clock className="w-4 h-4 mr-2" />
+          Campaign Ended
+        </Badge>
       </motion.div>
     )
   }
@@ -288,7 +294,6 @@ const CountdownTimer = ({
   if (format === 'inline') {
     return (
       <motion.div
-        className={`inline-flex items-center justify-center rounded-lg font-medium transition-colors duration-300 ${config.containerClass} ${colors.bg} ${colors.text} border ${colors.border} ${className}`}
         variants={containerVariants}
         animate={urgencyLevel}
         role="timer"
@@ -297,6 +302,10 @@ const CountdownTimer = ({
         aria-atomic="true"
         tabIndex={0}
       >
+        <Badge 
+          variant={colors.variant}
+          className={`inline-flex items-center justify-center transition-colors duration-300 ${config.containerClass} ${className}`}
+        >
         {/* Timer Segments */}
         <NumberDisplay 
           value={timeRemaining.days} 
@@ -344,6 +353,7 @@ const CountdownTimer = ({
             </span>
           )}
         </div>
+        </Badge>
       </motion.div>
     )
   }
@@ -351,7 +361,6 @@ const CountdownTimer = ({
   if (format === 'block') {
     return (
       <motion.div
-        className={`bg-white rounded-xl border border-gray-200 p-6 space-y-4 ${className}`}
         variants={containerVariants}
         animate={urgencyLevel}
         role="timer"
@@ -360,24 +369,27 @@ const CountdownTimer = ({
         aria-atomic="true"
         tabIndex={0}
       >
-        {/* Timer Header */}
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">Time Remaining</span>
-          <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${colors.bg} ${colors.text}`}>
-            <motion.div 
-              className={`w-1.5 h-1.5 rounded-full`}
-              variants={urgencyDotVariants}
-              animate={urgencyLevel}
-            />
-            <span>{colors.label}</span>
-          </div>
-        </div>
+        <Card className={`${className}`}>
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium">Time Remaining</CardTitle>
+              <Badge variant={colors.variant} className="flex items-center space-x-1">
+                <motion.div 
+                  className={`w-1.5 h-1.5 rounded-full`}
+                  variants={urgencyDotVariants}
+                  animate={urgencyLevel}
+                />
+                <span>{colors.label}</span>
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0 space-y-4">
         
         {/* Timer Display */}
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
             <motion.div 
-              className={`text-3xl font-bold tabular-nums ${colors.text}`}
+              className="text-3xl font-bold tabular-nums text-foreground"
               key={timeRemaining.days}
               variants={numberFlipVariants}
               initial="initial"
@@ -385,11 +397,11 @@ const CountdownTimer = ({
             >
               {timeRemaining.days}
             </motion.div>
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Days</div>
+            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Days</div>
           </div>
           <div className="text-center">
             <motion.div 
-              className={`text-3xl font-bold tabular-nums ${colors.text}`}
+              className="text-3xl font-bold tabular-nums text-foreground"
               key={timeRemaining.hours}
               variants={numberFlipVariants}
               initial="initial"
@@ -397,11 +409,11 @@ const CountdownTimer = ({
             >
               {timeRemaining.hours.toString().padStart(2, '0')}
             </motion.div>
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Hours</div>
+            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Hours</div>
           </div>
           <div className="text-center">
             <motion.div 
-              className={`text-3xl font-bold tabular-nums ${colors.text}`}
+              className="text-3xl font-bold tabular-nums text-foreground"
               key={timeRemaining.minutes}
               variants={numberFlipVariants}
               initial="initial"
@@ -409,31 +421,29 @@ const CountdownTimer = ({
             >
               {timeRemaining.minutes.toString().padStart(2, '0')}
             </motion.div>
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Minutes</div>
+            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Minutes</div>
           </div>
         </div>
         
         {/* Timer Progress */}
         <div className="space-y-2">
-          <div className="w-full bg-gray-200 rounded-full h-1">
-            <motion.div 
-              className={`bg-gradient-to-r ${
-                urgencyLevel === 'healthy' ? 'from-blue-500 to-blue-600' :
-                urgencyLevel === 'warning' ? 'from-amber-500 to-amber-600' :
-                'from-red-500 to-red-600'
-              } h-1 rounded-full transition-all duration-300`}
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={{ 
-                scaleX: 1 - (timeRemaining.days * 24 + timeRemaining.hours) / (30 * 24), // Assuming 30-day campaign
-                transition: { duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.5 }
-              }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Progress 
+              value={Math.max(0, 100 - (timeRemaining.days * 24 + timeRemaining.hours) / (30 * 24) * 100)} // Assuming 30-day campaign
+              className="w-full h-1"
             />
-          </div>
-          <div className="flex justify-between text-xs text-gray-500">
+          </motion.div>
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>Started</span>
             <span>Deadline</span>
           </div>
         </div>
+          </CardContent>
+        </Card>
       </motion.div>
     )
   }
@@ -441,7 +451,7 @@ const CountdownTimer = ({
   // Compact format
   return (
     <motion.div
-      className={`inline-flex items-center text-sm font-semibold ${colors.text} ${className}`}
+      className={`inline-flex items-center text-sm font-semibold text-foreground ${className}`}
       variants={containerVariants}
       animate={urgencyLevel}
       role="timer"

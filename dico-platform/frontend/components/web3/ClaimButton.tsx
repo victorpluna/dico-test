@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useClaim, useWalletConnection } from '@/lib/web3/hooks'
 import { type Address } from 'viem'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
 
 interface ClaimButtonProps {
   projectAddress: Address
@@ -50,12 +53,13 @@ export function ClaimButton({
     return (
       <div className={`text-center ${className}`}>
         <p className="text-sm text-gray-500 mb-2">Connect your wallet to claim tokens</p>
-        <button
+        <Button
           disabled
-          className="w-full px-4 py-2 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed"
+          variant="secondary"
+          className="w-full cursor-not-allowed"
         >
           Connect Wallet Required
-        </button>
+        </Button>
       </div>
     )
   }
@@ -67,12 +71,14 @@ export function ClaimButton({
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-green-800">Available to Claim</span>
           {vestingInfo && (
-            <button
+            <Button
               onClick={() => setShowDetails(!showDetails)}
-              className="text-sm text-green-600 hover:text-green-700 underline"
+              variant="ghost"
+              size="sm"
+              className="text-sm text-green-600 hover:text-green-700 underline p-0 h-auto"
             >
               {showDetails ? 'Hide' : 'Show'} Details
-            </button>
+            </Button>
           )}
         </div>
         <div className="flex items-baseline space-x-2">
@@ -102,16 +108,10 @@ export function ClaimButton({
                   {parseFloat(vestingInfo.claimedAmount).toLocaleString()} / {parseFloat(vestingInfo.totalAmount).toLocaleString()} {tokenSymbol}
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ 
-                    width: `${(parseFloat(vestingInfo.claimedAmount) / parseFloat(vestingInfo.totalAmount)) * 100}%`
-                  }}
-                  transition={{ duration: 1, ease: 'easeOut' }}
-                  className="bg-green-500 h-2 rounded-full"
-                />
-              </div>
+              <Progress 
+                value={(parseFloat(vestingInfo.claimedAmount) / parseFloat(vestingInfo.totalAmount)) * 100} 
+                className="h-2"
+              />
             </div>
 
             {/* Vesting Info */}
@@ -152,24 +152,17 @@ export function ClaimButton({
       </AnimatePresence>
 
       {/* Claim Button */}
-      <motion.button
-        whileHover={canClaim && !isLoading ? { scale: 1.02 } : {}}
-        whileTap={canClaim && !isLoading ? { scale: 0.98 } : {}}
+      <Button
         onClick={handleClaim}
         disabled={!canClaim || isLoading}
-        className={`
-          w-full px-6 py-3 rounded-lg font-semibold text-center
-          transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
-          ${!canClaim || isLoading
-            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-            : isSuccess
-            ? 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
-            : isError
-            ? 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
-            : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-md hover:shadow-lg'
-          }
-        `}
+        variant={isSuccess ? 'default' : isError ? 'destructive' : 'default'}
+        className="w-full px-6 py-3"
+        asChild
       >
+        <motion.button
+          whileHover={canClaim && !isLoading ? { scale: 1.02 } : {}}
+          whileTap={canClaim && !isLoading ? { scale: 0.98 } : {}}
+        >
         {isLoading ? (
           <div className="flex items-center justify-center space-x-2">
             <motion.div
@@ -210,7 +203,8 @@ export function ClaimButton({
         ) : (
           `Claim ${parseFloat(claimableAmount).toLocaleString()} ${tokenSymbol}`
         )}
-      </motion.button>
+        </motion.button>
+      </Button>
 
       {/* Transaction Status */}
       <AnimatePresence>
@@ -274,20 +268,23 @@ export function ClaimButton({
 
       {/* Reset Button */}
       {(isSuccess || isError) && (
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+        <Button
+          variant="outline"
           onClick={() => {
             transactionState.reset()
             setShowDetails(false)
           }}
-          className="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-900 
-                     border border-gray-200 hover:border-gray-300 rounded-lg
-                     transition-colors duration-200"
+          className="w-full"
+          asChild
         >
-          {isSuccess ? 'Claim More Tokens' : 'Dismiss'}
-        </motion.button>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
+          >
+            {isSuccess ? 'Claim More Tokens' : 'Dismiss'}
+          </motion.button>
+        </Button>
       )}
     </div>
   )

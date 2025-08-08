@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { useUIStore } from '@/lib/store'
 import type { Project } from './types'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 
 // Updated props to accept either individual props or a Project object
 interface ProjectCardProps {
@@ -41,7 +44,7 @@ const ProjectCard = ({
   cardIndex = 0
 }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
-  const { showInvestModal, showProjectModal } = useUIStore()
+  const { showInvestModal } = useUIStore()
   
   // Use project data if provided, otherwise fall back to individual props (for backward compatibility)
   const projectName = project?.name || legacyProjectName || 'Unknown Project'
@@ -203,182 +206,194 @@ const ProjectCard = ({
   }
   
   return (
-    <motion.div
-      className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md border border-gray-200/50 p-6 transition-all duration-300 cursor-pointer relative overflow-hidden group"
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
-      whileTap="tap"
-      onClick={() => {
-        if (project && project.smartContractAddress) {
-          showInvestModal(project.id, project.smartContractAddress as any)
-        } else {
-          onCardClick?.()
-        }
-      }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      role="button"
-      tabIndex={0}
-      aria-label={`Project: ${projectName}, ${progressPercentage.toFixed(1)}% funded, ${timeRemaining.days} days remaining`}
-      aria-describedby="project-details"
-      style={{
-        ...(isHovered ? cardHoverVariants.hover : cardHoverVariants.rest)
-      }}
-    >
-      {/* Glassmorphism Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
-      
-      {/* Header Section */}
-      <div className="flex items-center justify-between mb-4 relative z-10">
-        <div className="flex items-center space-x-3">
-          {/* Logo/Project Icon */}
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
-            {logo ? (
-              <img src={logo} alt={`${projectName} logo`} className="w-6 h-6 rounded" />
-            ) : (
-              <div className="w-6 h-6 bg-blue-600 rounded opacity-80" />
-            )}
+    <Card asChild>
+      <motion.div
+        className="bg-white/90 backdrop-blur-sm transition-all duration-300 cursor-pointer relative overflow-hidden group border-gray-200/50 hover:border-blue-200/50"
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        whileHover="hover"
+        whileTap="tap"
+        onClick={() => {
+          if (project && project.smartContractAddress) {
+            showInvestModal(project.id, project.smartContractAddress as any)
+          } else {
+            onCardClick?.()
+          }
+        }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        role="button"
+        tabIndex={0}
+        aria-label={`Project: ${projectName}, ${progressPercentage.toFixed(1)}% funded, ${timeRemaining.days} days remaining`}
+        aria-describedby="project-details"
+        style={{
+          ...(isHovered ? cardHoverVariants.hover : cardHoverVariants.rest)
+        }}
+      >
+        {/* Glassmorphism Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+        
+        {/* Header Section */}
+        <CardHeader className="relative z-10 pb-4">
+          <div className="flex items-center space-x-3">
+            {/* Logo/Project Icon */}
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
+              {logo ? (
+                <img src={logo} alt={`${projectName} logo`} className="w-6 h-6 rounded" />
+              ) : (
+                <div className="w-6 h-6 bg-blue-600 rounded opacity-80" />
+              )}
+            </div>
+            <CardTitle className="text-lg line-clamp-1">{projectName}</CardTitle>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{projectName}</h3>
-        </div>
-        
-        {/* Verification Badge */}
-        <div className="flex items-center space-x-2">
-          {verified && (
-            <motion.span 
-              className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full"
-              variants={badgeVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Verified
-            </motion.span>
-          )}
-        </div>
-      </div>
-      
-      {/* Progress Section (Primary Prominence) */}
-      <div className="space-y-3 mb-5 relative z-10">
-        <div className="flex justify-between items-baseline">
-          <span className="text-sm font-medium text-gray-700">Funding Progress</span>
-          <span className="text-lg font-bold text-blue-600">{progressPercentage.toFixed(1)}%</span>
-        </div>
-        
-        {/* Animated Progress Bar */}
-        <div className="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-          <motion.div 
-            className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full relative"
-            variants={progressBarVariants}
-            initial="initial"
-            animate="animate"
-            role="progressbar" 
-            aria-valuemin="0" 
-            aria-valuemax="100" 
-            aria-valuenow={Math.round(progressPercentage)}
-            aria-label={`Funding progress: ${progressPercentage.toFixed(1)}% of target reached`}
-          >
-            {/* Progress Glow Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-shimmer" />
-            
-            {/* Shimmer Animation */}
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12"
-              variants={shimmerVariants}
-              animate="animate"
-            />
-          </motion.div>
           
-          {/* Milestone Markers */}
-          <div className="absolute top-0 left-1/4 w-0.5 h-3 bg-gray-400 opacity-50" />
-          <div className="absolute top-0 left-1/2 w-0.5 h-3 bg-gray-400 opacity-50" />
-          <div className="absolute top-0 left-3/4 w-0.5 h-3 bg-gray-400 opacity-50" />
-        </div>
+          {/* Verification Badge */}
+          {verified && (
+            <Badge 
+              variant="secondary"
+              className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200 w-fit"
+              asChild
+            >
+              <motion.span 
+                variants={badgeVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Verified
+              </motion.span>
+            </Badge>
+          )}
+        </CardHeader>
         
-        {/* Funding Amounts */}
-        <div className="flex justify-between text-sm">
-          <span className="font-medium text-gray-900">{currentFunding.toFixed(1)} ETH raised</span>
-          <span className="text-gray-500">of {targetFunding.toFixed(1)} ETH target</span>
-        </div>
-      </div>
-      
-      {/* Trust Signals Section */}
-      <div className="space-y-3 mb-4 relative z-10">
-        {/* Own Funding (Skin in Game) */}
-        <div className="flex items-center justify-between py-2 px-3 bg-green-50/80 rounded-lg">
-          <span className="text-sm text-green-700 font-medium">Creator invested: {ownFunding} ETH</span>
-          <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
-            {skinInGamePercentage}% skin-in-game
-          </span>
-        </div>
+        <CardContent className="space-y-6 relative z-10 pt-0">
+          {/* Progress Section (Primary Prominence) */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-baseline">
+              <span className="text-sm font-medium text-gray-700">Funding Progress</span>
+              <span className="text-lg font-bold text-blue-600">{progressPercentage.toFixed(1)}%</span>
+            </div>
+            
+            {/* Animated Progress Bar */}
+            <div className="relative">
+              <Progress 
+                value={progressPercentage} 
+                className="h-3 bg-gray-200"
+                aria-label={`Funding progress: ${progressPercentage.toFixed(1)}% of target reached`}
+              />
+              
+              {/* Custom animated overlay for the progress */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <motion.div 
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full relative"
+                  variants={progressBarVariants}
+                  initial="initial"
+                  animate="animate"
+                  style={{ width: `${progressPercentage}%` }}
+                >
+                  {/* Progress Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-shimmer" />
+                  
+                  {/* Shimmer Animation */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12"
+                    variants={shimmerVariants}
+                    animate="animate"
+                  />
+                </motion.div>
+              </div>
+              
+              {/* Milestone Markers */}
+              <div className="absolute top-0 left-1/4 w-0.5 h-3 bg-gray-400 opacity-50" />
+              <div className="absolute top-0 left-1/2 w-0.5 h-3 bg-gray-400 opacity-50" />
+              <div className="absolute top-0 left-3/4 w-0.5 h-3 bg-gray-400 opacity-50" />
+            </div>
+            
+            {/* Funding Amounts */}
+            <div className="flex justify-between text-sm">
+              <span className="font-medium text-gray-900">{currentFunding.toFixed(1)} ETH raised</span>
+              <span className="text-gray-500">of {targetFunding.toFixed(1)} ETH target</span>
+            </div>
+          </div>
+          
+          {/* Trust Signals Section */}
+          <div className="space-y-3">
+            {/* Own Funding (Skin in Game) */}
+            <div className="flex items-center justify-between py-2 px-3 bg-green-50/80 rounded-lg">
+              <span className="text-sm text-green-700 font-medium">Creator invested: {ownFunding} ETH</span>
+              <Badge variant="secondary" className="text-xs text-green-600 bg-green-100 hover:bg-green-100 border-green-200">
+                {skinInGamePercentage}% skin-in-game
+              </Badge>
+            </div>
+            
+            {/* Backer Count and Updates */}
+            <div className="flex items-center space-x-4 text-sm text-gray-600">
+              <span className="flex items-center space-x-1">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span className="font-medium">{backers} backers</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <motion.div 
+                  className="w-2 h-2 bg-green-400 rounded-full"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [1, 0.8, 1]
+                  }}
+                  transition={{
+                    duration: 2,
+                    ease: "easeInOut",
+                    repeat: Infinity
+                  }}
+                />
+                <span>Updated {lastUpdated}</span>
+              </span>
+            </div>
+          </div>
+          
+          {/* Time Remaining (Urgency Colors) */}
+          <div className="countdown-container">
+            <div className={`text-center py-3 px-4 ${urgencyColors[urgencyLevel].bg} rounded-lg border ${urgencyColors[urgencyLevel].border}`}>
+              <div className="flex items-center justify-center space-x-2">
+                <span className={`text-sm font-semibold ${urgencyColors[urgencyLevel].text}`}>
+                  {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m remaining
+                </span>
+                <motion.div 
+                  className={`w-2 h-2 rounded-full ${urgencyLevel === 'healthy' ? 'bg-green-400' : urgencyLevel === 'warning' ? 'bg-amber-400' : 'bg-red-400'}`}
+                  animate={urgencyLevel === 'critical' ? {
+                    scale: [1, 1.5, 1],
+                    opacity: [1, 0.3, 1]
+                  } : urgencyLevel === 'warning' ? {
+                    scale: [1, 1.2, 1],
+                    opacity: [1, 0.8, 1]
+                  } : {}}
+                  transition={{
+                    duration: urgencyLevel === 'critical' ? 0.8 : 1.5,
+                    ease: "easeInOut",
+                    repeat: Infinity
+                  }}
+                />
+              </div>
+              <div className={`text-xs ${urgencyColors[urgencyLevel].text.replace('800', '600')} mt-1`}>
+                {urgencyLevel === 'healthy' ? 'Healthy timeline' : urgencyLevel === 'warning' ? 'Limited time' : 'Urgent deadline'}
+              </div>
+            </div>
+          </div>
+        </CardContent>
         
-        {/* Backer Count and Updates */}
-        <div className="flex items-center space-x-4 text-sm text-gray-600">
-          <span className="flex items-center space-x-1">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span className="font-medium">{backers} backers</span>
-          </span>
-          <span className="flex items-center space-x-1">
-            <motion.div 
-              className="w-2 h-2 bg-green-400 rounded-full"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [1, 0.8, 1]
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity
-              }}
-            />
-            <span>Updated {lastUpdated}</span>
-          </span>
-        </div>
-      </div>
-      
-      {/* Time Remaining (Urgency Colors) */}
-      <div className="countdown-container relative z-10">
-        <div className={`text-center py-3 px-4 ${urgencyColors[urgencyLevel].bg} rounded-lg border ${urgencyColors[urgencyLevel].border}`}>
-          <div className="flex items-center justify-center space-x-2">
-            <span className={`text-sm font-semibold ${urgencyColors[urgencyLevel].text}`}>
-              {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m remaining
-            </span>
-            <motion.div 
-              className={`w-2 h-2 rounded-full ${urgencyLevel === 'healthy' ? 'bg-green-400' : urgencyLevel === 'warning' ? 'bg-amber-400' : 'bg-red-400'}`}
-              animate={urgencyLevel === 'critical' ? {
-                scale: [1, 1.5, 1],
-                opacity: [1, 0.3, 1]
-              } : urgencyLevel === 'warning' ? {
-                scale: [1, 1.2, 1],
-                opacity: [1, 0.8, 1]
-              } : {}}
-              transition={{
-                duration: urgencyLevel === 'critical' ? 0.8 : 1.5,
-                ease: "easeInOut",
-                repeat: Infinity
-              }}
-            />
-          </div>
-          <div className={`text-xs ${urgencyColors[urgencyLevel].text.replace('800', '600')} mt-1`}>
-            {urgencyLevel === 'healthy' ? 'Healthy timeline' : urgencyLevel === 'warning' ? 'Limited time' : 'Urgent deadline'}
-          </div>
-        </div>
-      </div>
-      
-      {/* Hover Glow Effect */}
-      <motion.div 
-        className="absolute inset-0 rounded-xl opacity-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse-slow pointer-events-none"
-        variants={glowVariants}
-        initial="rest"
-        animate={isHovered ? "hover" : "rest"}
-      />
-    </motion.div>
+        {/* Hover Glow Effect */}
+        <motion.div 
+          className="absolute inset-0 rounded-xl opacity-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 animate-pulse-slow pointer-events-none"
+          variants={glowVariants}
+          initial="rest"
+          animate={isHovered ? "hover" : "rest"}
+        />
+      </motion.div>
+    </Card>
   )
 }
 

@@ -5,6 +5,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { z } from 'zod'
 import ProjectCard from './ProjectCard'
 import { useProjectStore, useToast, globalActions } from '@/lib/store'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
 
 // Zod validation schemas
 const whitepaperSchema = z.string().regex(/^ipfs:\/\/.*/, 'Must be a valid IPFS URL')
@@ -44,8 +50,9 @@ const ProjectForm = () => {
     createProject
   } = useProjectStore()
   
-  // Simple form validation
+  // Form validation state
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
+  const [validationStates, setValidationStates] = useState<Record<string, 'idle' | 'validating' | 'valid' | 'error'>>({})
   const [isValid, setIsValid] = useState(false)
   const { toast } = useToast()
   
@@ -88,7 +95,8 @@ const ProjectForm = () => {
   }, [loadDraft])
   
   const validateField = useCallback(async (field: string, value: any) => {
-    setField(field, 'validating')
+    setValidationStates(prev => ({ ...prev, [field]: 'validating' }))
+    setFormErrors(prev => ({ ...prev, [field]: '' }))
     
     try {
       switch (field) {
@@ -96,35 +104,31 @@ const ProjectForm = () => {
           whitepaperSchema.parse(value)
           // Simulate IPFS validation
           await new Promise(resolve => setTimeout(resolve, 1500))
-          setField(field, 'valid')
           break
         case 'projectPlanUrl':
           projectPlanSchema.parse(value)
           await new Promise(resolve => setTimeout(resolve, 1500))
-          setField(field, 'valid')
           break
         case 'smartContractCode':
           solidityCodeSchema.parse(value)
-          setField(field, 'valid')
           break
         case 'ownFunding':
           ownFundingSchema.parse(Number(value))
-          setField(field, 'valid')
           break
         case 'targetFunding':
           targetFundingSchema.parse(Number(value))
-          setField(field, 'valid')
           break
         case 'fundingAddress':
           addressSchema.parse(value)
-          setField(field, 'valid')
           break
       }
+      setValidationStates(prev => ({ ...prev, [field]: 'valid' }))
     } catch (error) {
       const message = error instanceof z.ZodError ? error.errors[0].message : 'Validation failed'
-      setField(field, 'error', message)
+      setFormErrors(prev => ({ ...prev, [field]: message }))
+      setValidationStates(prev => ({ ...prev, [field]: 'error' }))
     }
-  }, [setField])
+  }, [])
   
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -141,9 +145,11 @@ const ProjectForm = () => {
   }
   
   const getValidationState = (field: string) => {
-    return formErrors[field] ? 
-      { status: 'error' as const, message: formErrors[field] } :
-      { status: 'idle' as const }
+    const status = validationStates[field] || 'idle'
+    return { 
+      status, 
+      message: formErrors[field] || '' 
+    }
   }
   
   // Animation variants
@@ -267,14 +273,8 @@ const ProjectForm = () => {
         <p className="text-lg text-gray-600">Share your vision with the world</p>
         
         {/* Progress Indicator */}
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-8 mt-6">
-          <motion.div 
-            className="bg-blue-600 h-2 rounded-full"
-            variants={progressVariants}
-            initial="initial"
-            animate="animate"
-            style={{ width: `${progressPercentage}%` }}
-          />
+        <div className="mb-8 mt-6">
+          <Progress value={progressPercentage} className="h-2" />
         </div>
         
         {/* Step Indicators */}
@@ -326,40 +326,37 @@ const ProjectForm = () => {
                 
                 {/* Project Name */}
                 <div className="space-y-2">
-                  <label htmlFor="project-name" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="project-name" className="text-gray-700">
                     Project Name <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">The name of your project</span>
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="text"
                     id="project-name"
                     value={formData.projectName}
                     onChange={(e) => handleInputChange('projectName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 text-base focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors duration-200"
                     placeholder="Enter your project name"
+                    className="text-base"
                     required
                   />
                 </div>
                 
                 {/* White Paper URL */}
                 <div className="space-y-2">
-                  <label htmlFor="whitepaper-url" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="whitepaper-url" className="text-gray-700">
                     White Paper URL <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">IPFS link to your project white paper</span>
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <motion.input
+                    <Input
                       type="url"
                       id="whitepaper-url"
                       value={formData.whitepaperUrl}
                       onChange={(e) => handleInputChange('whitepaperUrl', e.target.value)}
-                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 text-base font-mono text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors duration-200"
+                      className="pr-12 font-mono text-sm"
                       placeholder="ipfs://QmYourWhitepaperHash"
                       pattern="^ipfs://.*"
                       required
-                      variants={validationVariants}
-                      animate={getValidationState('whitepaperUrl').status}
-                      aria-describedby="whitepaper-help whitepaper-error"
                     />
                     
                     {/* Validation Indicator */}
@@ -468,10 +465,10 @@ const ProjectForm = () => {
                 
                 {/* Smart Contract Code */}
                 <div className="space-y-2">
-                  <label htmlFor="smart-contract-code" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="smart-contract-code" className="text-gray-700">
                     Smart Contract Code <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">Solidity code for your token contract</span>
-                  </label>
+                  </Label>
                   
                   <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-blue-600">
                     {/* Code Editor Header */}
@@ -518,11 +515,11 @@ const ProjectForm = () => {
                     
                     {/* Code Editor Content */}
                     <div className="relative">
-                      <textarea
+                      <Textarea
                         id="smart-contract-code"
                         value={formData.smartContractCode}
                         onChange={(e) => handleInputChange('smartContractCode', e.target.value)}
-                        className="w-full p-4 pl-12 font-mono text-sm leading-relaxed resize-none border-none outline-none placeholder-gray-400 text-gray-900 min-h-[300px]"
+                        className="p-4 pl-12 font-mono text-sm leading-relaxed resize-none border-none outline-none min-h-[300px]"
                         placeholder={`pragma solidity ^0.8.0;
 
 contract YourToken {
@@ -650,23 +647,21 @@ contract YourToken {
                 
                 {/* Own Funding Amount */}
                 <div className="space-y-2">
-                  <label htmlFor="own-funding" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="own-funding" className="text-gray-700">
                     Your Own Funding (ETH) <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">Amount you'll invest in your own project</span>
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <motion.input
+                    <Input
                       type="number"
                       id="own-funding"
                       value={formData.ownFunding || ''}
                       onChange={(e) => handleInputChange('ownFunding', parseFloat(e.target.value) || 0)}
-                      className="w-full px-4 py-4 pr-16 text-2xl font-semibold text-right border border-gray-300 rounded-lg placeholder-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors duration-200"
+                      className="px-4 py-4 pr-16 text-2xl font-semibold text-right"
                       placeholder="0.00"
                       min="0.1"
                       step="0.01"
                       required
-                      variants={validationVariants}
-                      animate={getValidationState('ownFunding').status}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-4">
                       <span className="text-lg font-semibold text-gray-700">ETH</span>
@@ -694,23 +689,21 @@ contract YourToken {
                 
                 {/* Target Funding Amount */}
                 <div className="space-y-2">
-                  <label htmlFor="target-funding" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="target-funding" className="text-gray-700">
                     Target Funding Amount (ETH) <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">Total amount you want to raise</span>
-                  </label>
+                  </Label>
                   <div className="relative">
-                    <motion.input
+                    <Input
                       type="number"
                       id="target-funding"
                       value={formData.targetFunding || ''}
                       onChange={(e) => handleInputChange('targetFunding', parseFloat(e.target.value) || 0)}
-                      className="w-full px-4 py-4 pr-16 text-2xl font-semibold text-right border border-gray-300 rounded-lg placeholder-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors duration-200"
+                      className="px-4 py-4 pr-16 text-2xl font-semibold text-right"
                       placeholder="0.00"
                       min="1"
                       step="0.01"
                       required
-                      variants={validationVariants}
-                      animate={getValidationState('targetFunding').status}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-4">
                       <span className="text-lg font-semibold text-gray-700">ETH</span>
@@ -735,22 +728,20 @@ contract YourToken {
                 
                 {/* Funding Address */}
                 <div className="space-y-2">
-                  <label htmlFor="funding-address" className="block text-sm font-medium text-gray-700">
+                  <Label htmlFor="funding-address" className="text-gray-700">
                     Funding Address <span className="text-red-500">*</span>
                     <span className="block text-xs text-gray-500 font-normal">Ethereum address that will receive funds</span>
-                  </label>
+                  </Label>
                   <div className="flex space-x-3">
-                    <motion.input
+                    <Input
                       type="text"
                       id="funding-address"
                       value={formData.fundingAddress}
                       onChange={(e) => handleInputChange('fundingAddress', e.target.value)}
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 text-sm font-mono focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-colors duration-200"
+                      className="flex-1 font-mono text-sm"
                       placeholder="0x..."
                       pattern="^0x[a-fA-F0-9]{40}$"
                       required
-                      variants={validationVariants}
-                      animate={getValidationState('fundingAddress').status}
                     />
                     <button 
                       type="button"
@@ -934,37 +925,32 @@ contract YourToken {
           </div>
           
           <div className="flex items-center space-x-3">
-            <button 
-              type="button"
-              className="px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
-            >
+            <Button variant="outline" className="px-6 py-3 text-base">
               Save Draft
-            </button>
-            <button 
-              type="button"
+            </Button>
+            <Button 
+              variant="outline"
               onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
               disabled={currentStep === 1}
-              className="px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 text-base"
             >
               ← Previous
-            </button>
+            </Button>
             {currentStep < totalSteps ? (
-              <button 
-                type="button"
+              <Button 
                 onClick={() => setCurrentStep(Math.min(totalSteps, currentStep + 1))}
-                className="px-6 py-3 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-200"
+                className="px-6 py-3 text-base"
               >
                 Next →
-              </button>
+              </Button>
             ) : (
-              <button 
-                type="button"
+              <Button 
                 onClick={handleSubmit}
                 disabled={loading || !isValid}
-                className="px-6 py-3 text-base font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-6 py-3 text-base bg-green-500 hover:bg-green-600"
               >
                 {loading ? 'Submitting...' : 'Submit Project'}
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -44,7 +44,7 @@ export function Header({ activeProjectsCount = 0 }: HeaderProps) {
 
   return (
     <motion.header 
-      className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-40"
+      className="bg-background/80 backdrop-blur-lg border-b border-border sticky top-0 z-40"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -55,7 +55,7 @@ export function Header({ activeProjectsCount = 0 }: HeaderProps) {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <motion.h1 
-                className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >

@@ -5,33 +5,33 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --foreground: 181.9355 37.3494% 16.2745%;
+    --card: 180 45.4545% 97.8431%;
+    --card-foreground: 181.9355 37.3494% 16.2745%;
+    --popover: 180 45.4545% 97.8431%;
+    --popover-foreground: 181.9355 37.3494% 16.2745%;
+    --primary: 181.2000 37.3134% 26.2745%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 39.3939% 93.5294%;
+    --secondary-foreground: 181.9355 37.3494% 16.2745%;
+    --muted: 180 39.3939% 93.5294%;
+    --muted-foreground: 181.2000 37.3134% 26.2745%;
+    --accent: 180 39.3939% 93.5294%;
+    --accent-foreground: 181.9355 37.3494% 16.2745%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 180 29.5775% 86.0784%;
+    --input: 180 29.5775% 86.0784%;
+    --ring: 181.2000 37.3134% 26.2745%;
     --radius: 0.5rem;
+    --chart-1: 181.2000 37.3134% 26.2745%;
+    --chart-2: 181.7647 37.7778% 35.2941%;
+    --chart-3: 181.4118 37.7778% 44.1176%;
+    --chart-4: 181.1765 42.5000% 52.9412%;
+    --chart-5: 181.0084 61.0256% 61.7647%;
 
     /* Custom variables for Dico Platform */
-    --color-primary: #0066ff;
+    --color-primary: rgb(42, 91, 92);
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
     --spacing-unit: 8px;

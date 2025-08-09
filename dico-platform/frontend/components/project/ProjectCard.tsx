@@ -87,7 +87,7 @@ const ProjectCard = ({
   const urgencyColors = {
     healthy: { bg: 'bg-green-50/80', text: 'text-green-800', border: 'border-green-200/50' },
     warning: { bg: 'bg-amber-50/80', text: 'text-amber-800', border: 'border-amber-200/50' },
-    critical: { bg: 'bg-red-50/80', text: 'text-red-800', border: 'border-red-200/50' }
+    critical: { bg: 'bg-destructive/10', text: 'text-destructive', border: 'border-destructive/20' }
   }
   
   // Animation variants
@@ -208,7 +208,7 @@ const ProjectCard = ({
   return (
     <Card asChild>
       <motion.div
-        className="bg-white/90 backdrop-blur-sm transition-all duration-300 cursor-pointer relative overflow-hidden group border-gray-200/50 hover:border-blue-200/50"
+        className="bg-card/90 backdrop-blur-sm transition-all duration-300 cursor-pointer relative overflow-hidden group border-border hover:border-primary/50"
         variants={cardVariants}
         initial="hidden"
         animate="visible"
@@ -238,11 +238,11 @@ const ProjectCard = ({
         <CardHeader className="relative z-10 pb-4">
           <div className="flex items-center space-x-3">
             {/* Logo/Project Icon */}
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-primary/20 rounded-lg flex items-center justify-center">
               {logo ? (
                 <img src={logo} alt={`${projectName} logo`} className="w-6 h-6 rounded" />
               ) : (
-                <div className="w-6 h-6 bg-blue-600 rounded opacity-80" />
+                <div className="w-6 h-6 bg-primary rounded opacity-80" />
               )}
             </div>
             <CardTitle className="text-lg line-clamp-1">{projectName}</CardTitle>
@@ -252,7 +252,7 @@ const ProjectCard = ({
           {verified && (
             <Badge 
               variant="secondary"
-              className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200 w-fit"
+              className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200 w-fit"
               asChild
             >
               <motion.span 
@@ -273,22 +273,22 @@ const ProjectCard = ({
           {/* Progress Section (Primary Prominence) */}
           <div className="space-y-3">
             <div className="flex justify-between items-baseline">
-              <span className="text-sm font-medium text-gray-700">Funding Progress</span>
-              <span className="text-lg font-bold text-blue-600">{progressPercentage.toFixed(1)}%</span>
+              <span className="text-sm font-medium text-muted-foreground">Funding Progress</span>
+              <span className="text-lg font-bold text-primary">{progressPercentage.toFixed(1)}%</span>
             </div>
             
             {/* Animated Progress Bar */}
             <div className="relative">
               <Progress 
                 value={progressPercentage} 
-                className="h-3 bg-gray-200"
+                className="h-3 bg-muted"
                 aria-label={`Funding progress: ${progressPercentage.toFixed(1)}% of target reached`}
               />
               
               {/* Custom animated overlay for the progress */}
               <div className="absolute inset-0 rounded-full overflow-hidden">
                 <motion.div 
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full relative"
+                  className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full relative"
                   variants={progressBarVariants}
                   initial="initial"
                   animate="animate"
@@ -307,15 +307,15 @@ const ProjectCard = ({
               </div>
               
               {/* Milestone Markers */}
-              <div className="absolute top-0 left-1/4 w-0.5 h-3 bg-gray-400 opacity-50" />
-              <div className="absolute top-0 left-1/2 w-0.5 h-3 bg-gray-400 opacity-50" />
-              <div className="absolute top-0 left-3/4 w-0.5 h-3 bg-gray-400 opacity-50" />
+              <div className="absolute top-0 left-1/4 w-0.5 h-3 bg-muted-foreground opacity-50" />
+              <div className="absolute top-0 left-1/2 w-0.5 h-3 bg-muted-foreground opacity-50" />
+              <div className="absolute top-0 left-3/4 w-0.5 h-3 bg-muted-foreground opacity-50" />
             </div>
             
             {/* Funding Amounts */}
             <div className="flex justify-between text-sm">
-              <span className="font-medium text-gray-900">{currentFunding.toFixed(1)} ETH raised</span>
-              <span className="text-gray-500">of {targetFunding.toFixed(1)} ETH target</span>
+              <span className="font-medium text-foreground">{currentFunding.toFixed(1)} ETH raised</span>
+              <span className="text-muted-foreground">of {targetFunding.toFixed(1)} ETH target</span>
             </div>
           </div>
           
@@ -324,22 +324,22 @@ const ProjectCard = ({
             {/* Own Funding (Skin in Game) */}
             <div className="flex items-center justify-between py-2 px-3 bg-green-50/80 rounded-lg">
               <span className="text-sm text-green-700 font-medium">Creator invested: {ownFunding} ETH</span>
-              <Badge variant="secondary" className="text-xs text-green-600 bg-green-100 hover:bg-green-100 border-green-200">
+              <Badge variant="secondary" className="text-xs text-green-700 bg-green-50 hover:bg-green-50 border-green-200">
                 {skinInGamePercentage}% skin-in-game
               </Badge>
             </div>
             
             {/* Backer Count and Updates */}
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
               <span className="flex items-center space-x-1">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span className="font-medium">{backers} backers</span>
               </span>
               <span className="flex items-center space-x-1">
                 <motion.div 
-                  className="w-2 h-2 bg-green-400 rounded-full"
+                  className="w-2 h-2 bg-green-500 rounded-full"
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [1, 0.8, 1]
@@ -363,7 +363,7 @@ const ProjectCard = ({
                   {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m remaining
                 </span>
                 <motion.div 
-                  className={`w-2 h-2 rounded-full ${urgencyLevel === 'healthy' ? 'bg-green-400' : urgencyLevel === 'warning' ? 'bg-amber-400' : 'bg-red-400'}`}
+                  className={`w-2 h-2 rounded-full ${urgencyLevel === 'healthy' ? 'bg-green-500' : urgencyLevel === 'warning' ? 'bg-amber-500' : 'bg-destructive'}`}
                   animate={urgencyLevel === 'critical' ? {
                     scale: [1, 1.5, 1],
                     opacity: [1, 0.3, 1]

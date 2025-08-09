@@ -474,11 +474,11 @@ export default function ProjectsGrid() {
         >
           {/* Hero Section */}
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-bold text-gray-900">
+            <h2 className="text-4xl font-bold text-foreground">
               Discover Innovative{" "}
-              <span className="text-blue-600">DeFi Projects</span>
+              <span className="text-primary">DeFi Projects</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Invest in verified, transparent projects with full access to smart
               contracts, documentation, and creator commitment through locked
               funds.
@@ -490,7 +490,7 @@ export default function ProjectsGrid() {
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -508,13 +508,13 @@ export default function ProjectsGrid() {
                 placeholder="Search projects, creators, or technologies..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/80 backdrop-blur-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-sm"
+                className="block w-full pl-10 pr-3 py-3 border border-input rounded-xl leading-5 bg-background/80 backdrop-blur-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary text-sm"
               />
             </div>
           </div>
 
           {/* Filters and Sorting */}
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-gray-200/50">
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-card/60 backdrop-blur-sm rounded-xl p-4 border border-border">
             <div className="flex flex-wrap items-center gap-4">
               {/* Verification Filter */}
               <label className="flex items-center space-x-2">
@@ -526,16 +526,16 @@ export default function ProjectsGrid() {
                       verified: e.target.checked ? true : undefined,
                     })
                   }
-                  className="text-blue-600 rounded"
+                  className="text-primary rounded"
                 />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-card-foreground">
                   Verified Only
                 </span>
               </label>
 
               {/* Funding Range */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-card-foreground">
                   Min Funding:
                 </label>
                 <input
@@ -551,15 +551,15 @@ export default function ProjectsGrid() {
                         : undefined,
                     })
                   }
-                  className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-600"
+                  className="w-20 px-2 py-1 text-sm border border-input rounded focus:ring-1 focus:ring-ring"
                 />
-                <span className="text-sm text-gray-500">ETH</span>
+                <span className="text-sm text-muted-foreground">ETH</span>
               </div>
             </div>
 
             {/* Sort Options */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-card-foreground">
                 Sort by:
               </span>
               <select
@@ -571,7 +571,7 @@ export default function ProjectsGrid() {
                   ];
                   setSortBy({ field, direction });
                 }}
-                className="px-3 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-600 bg-white"
+                className="px-3 py-1 text-sm border border-input rounded focus:ring-1 focus:ring-ring bg-background"
               >
                 <option value="createdAt-desc">Newest First</option>
                 <option value="createdAt-asc">Oldest First</option>
@@ -590,13 +590,13 @@ export default function ProjectsGrid() {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white/60 backdrop-blur-sm rounded-xl p-6 animate-pulse"
+                className="bg-card/60 backdrop-blur-sm rounded-xl p-6 animate-pulse"
               >
-                <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-3 bg-gray-200 rounded mb-6"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
+                <div className="h-6 bg-muted rounded mb-4"></div>
+                <div className="h-4 bg-muted rounded mb-2"></div>
+                <div className="h-4 bg-muted rounded w-3/4 mb-4"></div>
+                <div className="h-3 bg-muted rounded mb-6"></div>
+                <div className="h-10 bg-muted rounded"></div>
               </div>
             ))}
           </div>
@@ -606,9 +606,9 @@ export default function ProjectsGrid() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-12"
           >
-            <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-6">
+            <div className="w-24 h-24 mx-auto bg-muted rounded-full flex items-center justify-center mb-6">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-8 h-8 text-muted-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -621,10 +621,10 @@ export default function ProjectsGrid() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               No projects found
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Try adjusting your search terms or filters to find more projects.
             </p>
             <button
@@ -632,7 +632,7 @@ export default function ProjectsGrid() {
                 setSearchTerm("");
                 setFilters({ status: [ProjectStatus.ACTIVE], verified: true });
               }}
-              className="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors"
             >
               Clear Filters
             </button>
@@ -686,7 +686,7 @@ export default function ProjectsGrid() {
                             handleInvestClick(project);
                           }}
                           disabled={!isConnected}
-                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:cursor-not-allowed shadow-lg"
+                          className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:cursor-not-allowed shadow-lg"
                         >
                           {isConnected
                             ? "Invest Now"
@@ -706,18 +706,18 @@ export default function ProjectsGrid() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-16 text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white"
+          className="mt-16 text-center bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-8 text-primary-foreground"
         >
           <h3 className="text-2xl font-bold mb-4">
             Have an Innovative Project?
           </h3>
-          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-primary-foreground/80 mb-6 max-w-2xl mx-auto">
             Join our platform and get access to a community of investors looking
             for transparent, verified projects with real potential.
           </p>
           <button
             onClick={() => window.open("/project/create", "_self")}
-            className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-primary-foreground text-primary font-semibold rounded-lg hover:bg-primary-foreground/90 transition-colors"
           >
             Create Project
             <svg

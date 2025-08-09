@@ -133,7 +133,7 @@ export default function CreateProject() {
         className="text-center mb-8"
       >
         <h1 className="text-4xl font-bold mb-4">
-          Create Your <span className="text-blue-600">DeFi Project</span>
+          Create Your <span className="text-primary">DeFi Project</span>
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
           Launch your innovative DeFi project on our transparent platform. 
@@ -365,11 +365,11 @@ export default function CreateProject() {
         transition={{ delay: 0.4 }}
         className="mt-12"
       >
-        <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
+        <Card className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-0">
           <CardContent className="p-8">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold mb-4">Join Successful Projects</h3>
-              <p className="text-blue-100 max-w-2xl mx-auto">
+              <p className="text-primary-foreground/80 max-w-2xl mx-auto">
                 Projects launched on Dico Platform have raised over $10M and achieved an average success rate of 75%.
               </p>
             </div>
@@ -377,15 +377,15 @@ export default function CreateProject() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold mb-2">$10M+</div>
-                <div className="text-blue-100">Total Raised</div>
+                <div className="text-primary-foreground/80">Total Raised</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold mb-2">150+</div>
-                <div className="text-blue-100">Projects Launched</div>
+                <div className="text-primary-foreground/80">Projects Launched</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold mb-2">75%</div>
-                <div className="text-blue-100">Success Rate</div>
+                <div className="text-primary-foreground/80">Success Rate</div>
               </div>
             </div>
           </CardContent>

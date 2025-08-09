@@ -231,7 +231,7 @@ export default function ProjectDetail() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
-        <Link href="/" className="hover:text-blue-600">Projects</Link>
+        <Link href="/" className="hover:text-primary">Projects</Link>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
@@ -278,7 +278,7 @@ export default function ProjectDetail() {
                 <Button
                   onClick={() => setInvestModalOpen(true)}
                   disabled={!isConnected || project.status !== ProjectStatus.ACTIVE}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
                   size="lg"
                 >
                   {!isConnected ? 'Connect Wallet' : 'Invest Now'}
@@ -330,7 +330,7 @@ export default function ProjectDetail() {
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div>
-                <p className="text-2xl font-bold text-blue-600">{project.funding.currentAmount} ETH</p>
+                <p className="text-2xl font-bold text-primary">{project.funding.currentAmount} ETH</p>
                 <p className="text-sm text-gray-500">Raised</p>
               </div>
               <div>
@@ -338,11 +338,11 @@ export default function ProjectDetail() {
                 <p className="text-sm text-gray-500">Target</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-green-600">{project.funding.ownFunding} ETH</p>
+                <p className="text-2xl font-bold text-primary">{project.funding.ownFunding} ETH</p>
                 <p className="text-sm text-gray-500">Creator Stake</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-purple-600">{project.backers.length}</p>
+                <p className="text-2xl font-bold text-primary">{project.backers.length}</p>
                 <p className="text-sm text-gray-500">Backers</p>
               </div>
             </div>
@@ -433,8 +433,8 @@ export default function ProjectDetail() {
                     <h3 className="text-xl font-semibold mb-4">Documents</h3>
                     <div className="space-y-3">
                       <a href={project.whitepaperUrl} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         </div>
@@ -546,7 +546,7 @@ export default function ProjectDetail() {
                   <code className="bg-gray-100 px-2 py-1 rounded font-mono text-xs">
                     {formatAddress(project.smartContractAddress || project.funding.fundingAddress)}
                   </code>
-                  <button className="text-blue-600 hover:text-blue-700">
+                  <button className="text-primary hover:text-primary/80">
                     View on Etherscan
                   </button>
                 </div>
@@ -565,14 +565,14 @@ export default function ProjectDetail() {
                 </button>
               </div>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
                 <div className="flex items-center space-x-2 mb-2">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h4 className="font-semibold text-blue-900">Contract Verified</h4>
+                  <h4 className="font-semibold text-primary">Contract Verified</h4>
                 </div>
-                <p className="text-blue-700 text-sm">
+                <p className="text-primary/80 text-sm">
                   This smart contract has been audited and verified by our security team. 
                   The code above represents the exact contract that will be deployed.
                 </p>
@@ -610,8 +610,8 @@ export default function ProjectDetail() {
                         <div className="flex items-center space-x-3">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                             update.type === 'milestone' ? 'bg-green-100 text-green-600' :
-                            update.type === 'technical' ? 'bg-blue-100 text-blue-600' :
-                            update.type === 'funding' ? 'bg-purple-100 text-purple-600' :
+                            update.type === 'technical' ? 'bg-primary/10 text-primary' :
+                            update.type === 'funding' ? 'bg-primary/10 text-primary' :
                             'bg-gray-100 text-gray-600'
                           }`}>
                             {update.type === 'milestone' ? '🎯' :
@@ -667,7 +667,7 @@ export default function ProjectDetail() {
                           <div className="flex items-center space-x-2 text-sm text-gray-500">
                             <span>From: {formatAddress(tx.from)}</span>
                             <span>•</span>
-                            <a href={`https://etherscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700">
+                            <a href={`https://etherscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80">
                               {formatAddress(tx.txHash)}
                             </a>
                           </div>
@@ -694,7 +694,7 @@ export default function ProjectDetail() {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/60 rounded-full flex items-center justify-center text-primary-foreground font-semibold">
                           {backer.anonymous ? '?' : (backer.name ? backer.name[0].toUpperCase() : formatAddress(backer.walletAddress)[2].toUpperCase())}
                         </div>
                         <div>
